@@ -10,10 +10,73 @@ Entonces las funciones en Python son objects de tipo.
 
 Veamos las ventajas de que las funciones sean objetos.
 
-**Asignando funciones a variables:**
+**Asignar funciones a variables:**
+
+Digamos que defino un método greet como este:
+```Python
+def greet(name):
+    print("Hello " + name)
+
+greet("World")                ## => "Hello World"
+greet("Universe")                ## => "Hello Universe"
+```
+
+Pero como _greet_ es un objeto de tipo función, puedo asignarlo a una variable  a la que llamo _say_hello_:
+```Python
+say_hello = greet
+```
+Ahora _say_hello_ es un objeto de tipo función, lo que significa que puedo llamarlo como _greet_:
+
+```Python
+say_hello("Earth")                         ## => "Hello Earth"
+say_hello("Mars")                         ## => "Hello Mars"
+```
+
+Esto se puede hacer debido a que las funciones son ciudadanos de primera clase(first class citizens).
 
 
+**Pasando funciones comom argumentos:**
+
+En Python puedes pasar funciones como argumentos de otras funciones
+
+Supongamos que tenemos una función _call_func_ que se define :
+
+```Python
+def call_func(x, func):
+    """recieve a function and execute it and return result"""
+    return func(x)
+
+```
+_call_func_ es una función que solo devuelve el valor de _func(x)_
 
 
+Definamos dos funciones simples :
+```Python
+def square(x): return x * x
+def cube(x): return x * x * x
+```
 
+Ahora pasemos estas funciones a _call_func_ 
+
+```Python
+res = call_func(6, do_square)   # passing function to another function
+print(res)
+res = call_func(5, do_cube)
+print(res)
+```
+*Almacenando funciones en otras estructuras de datos:*
+
+También puedes almacenar funciones en otras structuras de datos como listas, diccioarios, etc
+
+Definamos una lista llamada _operations_ que almacene la función previamente definiada _square_ y _cube_:
+
+```Python
+operations = [square, cube]
+```
+Y luego vamos a llamar a estas funciones con los índices de la lista:
+
+```Python
+print(operations[0](3)) ##=> 9
+print(operations[1](7)) ##=>343
+```
 
