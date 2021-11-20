@@ -80,3 +80,20 @@ print(operations[0](3)) ##=> 9
 print(operations[1](7)) ##=>343
 ```
 
+## List comprehension 
+
+Uno de los aspectos más distintivos de Python son las list y las list comprehension feature, que pueden usarse en una línea de código construir funcionalidades poderosas.
+
+Las list comprehension se utilizan para crear  nuevas listas a partir de otros iterables como tuplas, strings, lists,etc. 
+
+*List comprehension Python Sintax:*
+
+``` Python
+newList = [ expression(element) for element in oldList if condition ] 
+```
+
+Ventajas de las List comprehension:
+* Más eficiente en tiempo y espacio que los ciclos(loops)
+* Requiere menos líneas de código
+* Transforma una declaración iterativa en una fórmula
+
