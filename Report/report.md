@@ -1,5 +1,7 @@
 # Seminario 12. Características funcionales en lenguajes Multi-paradigma 
 
+[TOC]
+
 
 
 ### Capacidades de pattern matching en C# 
@@ -173,3 +175,44 @@ public decimal CalculateDiscount(Order order) =>
 ```
 
 El codigo anterior muestra la *positional pattern* donde las propiedades son decontruidas por la expersion 
+
+
+
+### List comprehension en C# 
+
+Una List Comprehension en C# es un tipo de notacion en el que el programador puede describir las propiedades que los miembros de un conjunto debe reunir. Is usualmente usado para crear un conjunto basado en otro ya existente aplicando algun tipo de combinacion. 
+
+Con la aparición de C# 3.0 y de .Net Framework 3.5, aparecio la notacion *List Comprehension* basada en `Linkq` . El siguiente ejemplo muestra como formar un conjunto de números pares en el rango del 0 al 10.
+
+```c#
+IEnumerable<int> numbers = Enumerable.Range(0, 10);
+var evens = from num in numbers where num % 2 == 0 select num;
+```
+
+Esto nos va a dar a retornar un objeto `evens` que es una lista que contiene a todos los números pares del 0 al 10  , `0 2 4 6 8 ` 
+
+Las *querys expression* en C# 3 en adelante son azúcar sintáctica sobre la nomenclatura del código de C# normal. Aunque las expresiones de consultas generalmente terminan llamando a métodos de extencion (No tienen que hacerlo y al compilador no le importa, pero generalmente si). Hay varias cosas que se pueden hacer con las colecciones que no estan disponibles en las expresiones de consulta de C#, pero son compatibles con las llamadas a métodos, por lo que vale la pena conocer ambos tipos de sintaxis.
+
+```c#
+List<Foo> fooList = new List<Foo>();
+IEnumerable<string> extract = from foo in fooList where foo.Bar > 10 select foo.Name.ToUpper();
+```
+
+es preprocesado en: 
+
+```c#
+List<Foo> fooList = new List<Foo>();
+IEnumerable<string> extract = fooList.Where(foo => foo.Bar > 10)
+                                     .Select(foo => foo.Name.ToUpper());
+```
+
+Si se quieren hacer filtros basados en el indice del valor en la colección original se puede usar una sobrecarga apropiada de `Where` que no es posible en las *query expression*  
+
+```c#
+List<Foo> fooList = new List<Foo>();
+IEnumerable<string> extract = fooList.Where((foo, index) => foo.Bar > 10 + index)
+                                     .Select(foo => foo.Name.ToUpper());
+```
+
+
+
