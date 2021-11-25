@@ -38,11 +38,138 @@ El `not` es un patrón lógico que retorna verdadero cuando el cuando el patrón
 
 
 
-[link](https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/functional/pattern-matching)
+##### Type tests 
+
+Otro uso común de *pattern matching* es chequear una variable para ver de que tipo es. El siguiente ejemplo chequea si una variable no es `null` e implementa la interfaz `IList<T>`. Si la implementa esta usa la propiedad `Count`  de `ICollection<T>` para encontrar el indice medio.  El  *pattern matching* no coincide con un valor nulo, independientemente del tipo en tiempo de compilación de la variable. El código siguiente protege contra `null`, ademas de protegerse contra un tipo que no implementa `IList` 
 
 
 
+```c#
+public static T MidPoint<T>(IEnumerable<T> sequence)
+{
+    if (sequence is IList<T> list)
+    {
+        return list[list.Count / 2];
+    }
+    else if (sequence is null)
+    {
+        throw new ArgumentNullException(nameof(sequence), "Sequence can't be null.");
+    }
+    else
+    {
+        int halfLength = sequence.Count() / 2 - 1;
+        if (halfLength < 0) halfLength = 0;
+        return sequence.Skip(halfLength).First();
+    }
+}
+```
+
+Lo mismo se puede aplicar en una expresión `switch`  para comprobar que con múltiples tipos diferentes. 
 
 
 
+##### Compare discrete values 
 
+También se puede chequear una variable para encontrar si machea con un valor especifico. El siguiente código muestra un ejemplo donde se chequea un valor a través de todos los posibles valores declarados en una enumeración. 
+
+```c#
+public State PerformOperation(Operation command) =>
+   command switch
+   {
+       Operation.SystemTest => RunDiagnostics(),
+       Operation.Start => StartSystem(),
+       Operation.Stop => StopSystem(),
+       Operation.Reset => ResetToReady(),
+       _ => throw new ArgumentException("Invalid enum value for command", nameof(command)),
+   };
+```
+
+El ejemplo anterior muestra un método de envió basado en el valor de una enumeración. El caso final `_` es un `discard pattern` que machea todos los valores. Este  maneja cualquier error en la condicion donde el valor no machea con ninguno de los valores del `enum`.  Si se omite esa parte del bloque `switch` el compilador avisara que no se  puede manajar una respuesta para todas la posibles entradas.  En tiempo de ejecucion la expresion `switch` lanza una excepcion si el objeto que se examina no coincide con ninguno de los casos del `switch`. Se podria usar constantes numericas en lugar de de un conjunto de valores `enum` . Se puede usar tecnicas similares para valores de constantes de string que representan el comando 
+
+```c#
+public State PerformOperation(string command) =>
+   command switch
+   {
+       "SystemTest" => RunDiagnostics(),
+       "Start" => StartSystem(),
+       "Stop" => StopSystem(),
+       "Reset" => ResetToReady(),
+       _ => throw new ArgumentException("Invalid string value for command", nameof(command)),
+   };
+```
+
+ El ejemplo anterior muestra el mismo algoritmo pero usando valores string en lugar de un `enum` . En todos esos ejemplos *discard pattern* asegura que se cubren todas las entradas posibles.  El compilador asegura que cada posible entrada es manejada. 
+
+
+
+##### Relational patterns 
+
+Tu puedes usar *relational patterns* para probar como se compara un valor con las constantes.  Por ejemplo el siguiente codigo retorna el estado del agua basada en la temperatura en Fahrenheit: 
+
+```c#
+string WaterState(int tempInFahrenheit) =>
+    tempInFahrenheit switch
+    {
+        (> 32) and (< 212) => "liquid",
+        < 32 => "solid",
+        > 212 => "gas",
+        32 => "solid/liquid transition",
+        212 => "liquid / gas transition",
+    };
+```
+
+ El código anterior también muestra el *logical pattern* `and` para chequear que ambas condicionales se complen . Las dos sentecias  finales del `switch` dan salida a las dos posibles entradas que quedaban por asignar. Sin esas dos asignaciones el compilador avisaria que tu logica no cubre todas las entradas posibles. 
+
+El código anterior también muestra otra importante característica que provee el compilador para las expresiones de *pattern matching*: El compilador te avisa si no se tratan todos los casos para todas las posibles entradas. Otra forma de de escribir la misma expresion puede ser: 
+
+```c#
+string WaterState2(int tempInFahrenheit) =>
+    tempInFahrenheit switch
+    {
+        < 32 => "solid",
+        32 => "solid/liquid transition",
+        < 212 => "liquid",
+        212 => "liquid / gas transition",
+        _ => "gas",
+};
+```
+
+La importancia de que el compilador valida si a todas las posibles entradas son procesadas radica en posibles Excepciones del programa, refractorizacion y reordenamiento del codigo. 
+
+##### Multiple inputs 
+
+Se pueden escribir partrones que examinan multiples  propiedades de un objeto. Considera el siguiente *Order* `record` 
+
+```c#
+public record Order (int Item, decimal Cost); 
+```
+
+El siguiente codigo examina el numero de articulos y el valor de pedido para calcular un precio con descuento: 
+
+```c#
+public decimal CalculateDiscount(Order order) =>
+    order switch
+    {
+        (Items: > 10, Cost: > 1000.00m) => 0.10m,
+        (Items: > 5, Cost: > 500.00m) => 0.05m,
+        Order { Cost: > 250.00m } => 0.02m,
+        null => throw new ArgumentNullException(nameof(order), "Can't calculate discount on null order"),
+        var someObject => 0m,
+    };
+```
+
+Los primeros dos casos examinan dos propiedades del Order. La tercera examina solo el costo, la siguiente chequean el `null` y el final machea cualquier otra valor. Si el tipo Order define un metodo apropiado `Decontruct` tu puedes omitir la propiedad llamada del patron y usar la deconstruccion para examinar las propiedades: 
+
+```c#
+public decimal CalculateDiscount(Order order) =>
+    order switch
+    {
+        ( > 10,  > 1000.00m) => 0.10m,
+        ( > 5, > 50.00m) => 0.05m,
+        Order { Cost: > 250.00m } => 0.02m,
+        null => throw new ArgumentNullException(nameof(order), "Can't calculate discount on null order"),
+        var someObject => 0m,
+    };
+```
+
+El codigo anterior muestra la *positional pattern* donde las propiedades son decontruidas por la expersion 
