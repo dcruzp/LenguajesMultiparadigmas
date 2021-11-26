@@ -86,7 +86,7 @@ Uno de los aspectos más distintivos de Python son las list y las list comprehen
 
 Las list comprehension se utilizan para crear  nuevas listas a partir de otros iterables como tuplas, strings, lists,etc. 
 
-*List comprehension Python Sintax:*
+**List comprehension Python Sintax:**
 
 ``` Python
 newList = [ expression(element) for element in oldList if condition ] 
@@ -96,4 +96,119 @@ Ventajas de las List comprehension:
 * Más eficiente en tiempo y espacio que los ciclos(loops)
 * Requiere menos líneas de código
 * Transforma una declaración iterativa en una fórmula
+
+**List Comprehensions vs Ciclos For:**
+
+Hay varias formas de recorrer una lista en Python. Sin embargo el enfoque más común es usar el ciclo for.
+
+Veamos el siguiente ejemplo:
+   
+```Python
+# Lista vacía
+List = []
+ 
+# Enfoque tradicional al iterar
+for c in 'ComputerScience':
+    List.append(c)
+ 
+# imprimir la lista
+print(List)
+```
+
+
+Ouput:
+```
+['C', 'o', 'm', 'p', 'u', 't', 'e', 'r', 'S', 'c', 'i', 'e', 'n', 'c', 'e']
+
+```
+ Esta es la manera tradicional para iterar por una lista, tupla, string, etc en Python. Ahora con list comprehension podemos hacer la misma tarea y hacemos que el programa sea más simple.
+
+
+ List comprehension traduce el enfoque de una interación tradicional usando for en una fórmula simple, lo que las hace fáciles de usar. A continuación se muestra el enfoque parar iterar a través de una lista, string, tupla, etc utilizando list comprehension.
+
+```Python
+ # usando list comprehension para iterar a través de un ciclo
+List = [character for character in 'ComputerScience']
+ 
+# imprime en patalla List
+print(List)
+```
+Ouput:
+```
+['C', 'o', 'm', 'p', 'u', 't', 'e', 'r', 'S', 'c', 'i', 'e', 'n', 'c', 'e']
+
+```
+ 
+**Más ejemplos:**
+
+Obtener una lista con los enteros que están en [0,10):
+```Python
+d = [x for x in range(10)]
+
+print(d)
+```
+
+Output:
+```Python
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+
+Números pares hasta 100:
+```Python
+pares = [ x for x in range(100) if x%2 ==0]
+print(pares)
+```
+Output:
+
+```Python
+[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98]
+```
+
+Las list comprehension son más eficientes tanto computacionalmente como en términos de espacio y tiempo de codificación que un ciclo for. Normalmente se escriben en una sola línea de código. 
+
+El siguiente código muestra la diferencia entre ciclos for y list comprehension según el rendimiento:
+
+```Python
+import time
+ 
+# definamos la función a implementar usando ciclo for  
+
+def for_loop(n):
+    result = []
+    for i in range(n):
+        result.append(i**2)
+    return result
+ 
+ 
+# definamos la función a implementar usando list comprehension
+def list_comprehension(n):
+    return [i**2 for i in range(n)]
+ 
+ 
+
+ 
+# Calcular el tiempo que toma for_loop()
+begin = time.time()
+for_loop(10**6)
+end = time.time()
+ 
+# Mostrar el tiempo que tomó for_loop()
+print('Time taken for_loop:',round(end-begin,2))
+ 
+# Calcular el tiempo que toma lis_comprehension()
+begin = time.time()
+a = list_comprehension(10**6)
+end = time.time()
+ 
+# Mostrar el tiempo que tomó list_comprehension()
+print('Time taken for list_comprehension:',round(end-begin,2))
+```
+
+Output:
+```
+Time taken for_loop: 0.26
+Time taken for list_comprehension: 0.23
+```
+Se puede ver que las list comprehension son bastante más rápidas que los ciclos for.
+
 
