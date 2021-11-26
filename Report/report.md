@@ -214,5 +214,46 @@ IEnumerable<string> extract = fooList.Where((foo, index) => foo.Bar > 10 + index
                                      .Select(foo => foo.Name.ToUpper());
 ```
 
+Tambien existe `List<T>.ConvertAll` que se comporta igual que las *list Comprehension* realizando la misma operacion en cada elemento de una lista existente y luego devolviendo una nueva coleccion. Esta es una alternativa al uso de `Linq`, especialmente si se esta usando .NET 2.0 . En el ejemplo siguiente se muestra como usar esta con C# 3.0 pasando una funcion lambda especificando la funcion de mapeo que se necesita.  
 
+```c#
+var foo = new List<int> {1,2,3}; 
+var bar = foo.ConvertAll (x => x * 2);  //list comprehension 
+Console.WriteLine(string.Join(" ", bar)) // should print 2,4,6
+```
+
+Para C# 2.0, tu puedes usar un metodo anonimo con el `delegate`  `Convert`  para hacer algo parecido. 
+
+```c#
+List<int> foo = new List<int> (new int[]{1,2,3}); 
+var bar = foo.ConvertAll(new Converter<int, int>(delegate (int x) { return x * 2; }));
+Console.WriteLine(string.Join(" ", bar));
+```
+
+ Esto se puede aplicar no solo a listas , tambien se pueden usar `Arrays` usando `Array.ConvertAll` 
+
+### Inferencia de Tipos en C# 
+
+La inferencia de tipos es un proceso por el cual el compilador determina el tipo de una variable local que ha sido declarada sin una declaracion explicita de su tipo. El tipo es inferido a partir del valor inicial provisto a la variable. Para que el algoritmo de inferencia de tipos funciones es necesaria una entrada, que es el contenido de la variable. Si no inicializamos la variable a inferir tendremos un error de compilacion. La inferencia de tipos en C# se puede implementar haciendo uso de la palabra reservada `var` . la sintaxis para declarar una variable haciendo uso de la inferencia de tipos seria asi: 
+
+```c#
+var x = new ArrayList(); 
+```
+
+en este caso el compilador determino que la variable `x` es del tipo `ArrayList` , pese a que en ningun momento se ha declarado su tipo explicitamente. 
+
+La inferencia de tipos por valor generaliza al tipo mas implicito y optimzado del .Net Framework. Como el framework optimiza la performance para tipos enteros de 32-bits (System.Int32 y System.UInt32) un valor de 0,10 o de 100 que perfectamente podrian inferirse como `System.Byte` se infiere como system.Int32. Incluso se recomienda usar los tipos enteros para contradores (aunque contemos del 0 al 10) y variables enteras de acceso frecuente, ya que la performance en tiempo de ejecucion del tipo entero es preferible al storage en RAM que ahorramos si declaramos varaibles como `System.SByte`, `System.Byte` y `System.Int16`. De la misma manera, con valores de punto flotante si declaramos una variable con un valor de 3.14 sera inferida al tipo `System.Double` y no como System.Single(float) que perfectamente se la puede contener. La razon es que las operaciones con System.Double son optimizadas por hardware. Solo se infiere a un tipo no optimizado por el Framework(como System.Int64 o System.Decimal)  si el valor de la variable esta fuera del rango de los tipos optimizados. Si por ejemplo queremos que se infiera el valor 3.14 como float en vez de double, debemos proporcionar cierta evidencia que ayude al compilador a inferirlo como float. 
+
+``` c#
+var inferredType = (float)3.14  // casting explicito 
+var inferredType = 3.14f        // notacion sufijo 
+```
+
+Entonces resumiendo la inferencia de tipos no se resuelve utilizando mecanismo de codigo dinamico, que afecten la performance en tiempo de ejecucion. La inferencia de tipos se resuelve en tiempo de compilacion, por lo tanto existe un costo en tiempo de compilacion, ese tiempo es el tiempo que terad el algoritmo de inferencia en sintetizar una expresion y resolver el tipo de una variable.  La inferencia de tipos tanto de valor como de referencia es para variable locales de metodos. No se aplica para variables de clases, propiedades, parametros ni valores de retorno. La inferencia de tipos no es mas que azucar sintacica, una manera comoda y agil de delcarar variables locales.
+
+
+
+### Tuplas en C# 
+
+Las tuplas se crea nut  
 
