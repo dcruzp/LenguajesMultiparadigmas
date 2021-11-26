@@ -334,4 +334,73 @@ Puntos importantes de las list comprehension en Python:
 * Generalmente las list comprehension son una forma más liviana para crear listas que la forma estándar con funciones y ciclos.
 * Cada list comprehension puede ser reescrita en un ciclo for, ero en el contexto de interpretación de listas, no se puede reescribir cada bucle for.
   
+# Tuplas:
+
+Las tuplas en Python son una colección de objetos separados por , . Las tuplas en Python o tuples son muy similares a las listas, pero con dos diferencias. Son inmutables, lo que significa que no pueden ser modificadas una vez declaradas, y en vez de inicializarse con corchetes se hace con (). 
+
+**Crear una tupla en Python:**
+
+Con paréntesis:
+```Python
+tupla = (1, 2, 3, 4, 5) 
+print(tupla) #(1, 2, 3, 4 ,5)
+```
+Output:
+```Python
+(1, 2, 3, 4, 5)
+```
+
+Sin paréntesis:
+
+```Python
+tupla = 1, 2, 3, 4, 5
+print(tupla) #(1, 2, 3, 4 ,5)
+```
+Output:
+```Python
+(1, 2, 3, 4, 5)
+```
+
+Tupla vacía:
+```Python
+# An empty tuple
+empty_tuple = ()
+print (empty_tuple)
+```
+Output:
+```
+()
+```
+
+Tupla de un solo elemento:
+```Python
+tupla = (1,)
+print(tupla)
+print(type(tupla))
+```
+
+Output:
+```
+(1,)
+<class 'tuple'>
+```
+
+Tuplas anidadas:
+
+En Python se pueden crear tuplas que contengas otras tuplas como elementos de estas.
+
+**Ejemplo:**
+
+```Python
+# Code for creating nested tuples
+tuple1 = (0, 1, 2, 3, 4)
+tuple2 = ('Python', 'C++', 'C#', 'F#', 'Haskell')
+tuple3 = (tuple1, tuple2)
+print(tuple3)
+```
+
+Output:
+```
+((0, 1, 2, 3, 4), ('Python', 'C++', 'C#', 'F#', 'Haskell'))
+```
 
