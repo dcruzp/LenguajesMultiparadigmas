@@ -211,4 +211,127 @@ Time taken for list_comprehension: 0.23
 ```
 Se puede ver que las list comprehension son bastante más rápidas que los ciclos for.
 
+**List comprehension anidadas:**
+
+Las list comprehension anidadas no son más que una list comprehension dentro de otra list comprehension, bastante similar a los ciclos anidados.
+
+A continuación un código con ciclos anidados:
+```Python
+#using nested for-loop
+
+matrix = []
+ 
+for i in range(3):
+     
+    # Append an empty sublist inside the list
+    matrix.append([])
+     
+    for j in range(5):
+        matrix[i].append(j)
+         
+print(matrix)
+```
+
+Output:
+```
+[[0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4]]
+```
+
+Si usamos list comprehesion anidadas se puede generar la misma salida menos líneas de código
+```Python
+# using nested list comprehension
+
+matrix = [[j for j in range(5)] for i in range(3)]
+ 
+print(matrix)
+```
+Output:
+```
+[[0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4]]
+```
+**List Comprehensions y Lambda:**
+
+Las lambda expressions no son más que representaciones abreviadas de funciones en Python. Usar list comprehension con lambda expressions resulta una combinación bastante eficiente.
+
+Por ejemplo:
+
+Si queremos imprimir x * 10 si x es par y x * 5 si x es impar de 1 a 10:
+
+```Python
+n = [x() for x in [lambda x=x: x*10 if x%2 ==0 else x*5 for x in range(1, 11)]]
+ 
+print(n)
+```
+
+Dada una cadena s devolver la lista de caracteres de esta en toggle case:
+
+```Python
+# toggle case
+
+# Inicializar el  string
+string = 'Python'
+
+# Toggle case de cada caracter de entrada
+toggle = lambda s: [chr(ord(c)^32) for c in s ]
+# Imprimir la lista
+print(toggle(string))
+```
+
+Output:
+```
+['p', 'Y', 'T', 'H', 'O', 'N']
+```
+
+**List Comprehension condicionales:**
+
+También podemos agregar declaraciones condicionales a las list comprehension. Podemos crear una list usando range(), operadores etc, y aplicar algunas condiciones a la lista usand if statement.
+
+*Ejemplo1:*
+
+Mostrar el cuadrado de los números pares de 1 a 10:
+```Python
+# Obtener una lisa con los cuadrados de los números pares desde 1 hasta 10
+squares = [n**2 for n in range(1, 11) if n%2==0]
+ 
+# imprimir la list de cuadrados
+print(squares)
+```
+
+*Output*:
+
+```
+[4, 16, 36, 64, 100]
+```
+
+
+**Más ejemplos de list comprehensions:**
+
+Obtener la transpuesta de una matriz:
+
+```Python
+
+# assignar una matriz
+matrix = [[10, 1, 3],
+          [7,  5, 7],
+          [11, 34, 13]]
+ 
+# Transpuesta usando list comprehension
+trans = [[i[j] for i in matrix] for j in range(len(matrix))]
+ 
+
+for i in trans:
+    print(i)
+```
+Output:
+```
+[10, 7, 11]
+[1, 5, 34]
+[3, 7, 13]
+```
+
+Puntos importantes de las list comprehension en Python:
+* La list comprehension son un medio eficaz de describir y construir listas basadas en listas actuales
+* Generalmente las list comprehension son una forma más liviana para crear listas que la forma estándar con funciones y ciclos.
+* Cada list comprehension puede ser reescrita en un ciclo for, ero en el contexto de interpretación de listas, no se puede reescribir cada bucle for.
+  
 
