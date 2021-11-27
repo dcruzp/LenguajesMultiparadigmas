@@ -334,4 +334,214 @@ Puntos importantes de las list comprehension en Python:
 * Generalmente las list comprehension son una forma más liviana para crear listas que la forma estándar con funciones y ciclos.
 * Cada list comprehension puede ser reescrita en un ciclo for, ero en el contexto de interpretación de listas, no se puede reescribir cada bucle for.
   
+# Tuplas:
+
+Las tuplas en Python son una colección de objetos separados por , . Las tuplas en Python o tuples son muy similares a las listas, pero con dos diferencias. Son inmutables, lo que significa que no pueden ser modificadas una vez declaradas, y en vez de inicializarse con corchetes se hace con (). 
+
+**Crear una tupla en Python:**
+
+Con paréntesis:
+```Python
+tupla = (1, 2, 3, 4, 5) 
+print(tupla) #(1, 2, 3, 4 ,5)
+```
+Output:
+```Python
+(1, 2, 3, 4, 5)
+```
+
+Sin paréntesis:
+
+```Python
+tupla = 1, 2, 3, 4, 5
+print(tupla) #(1, 2, 3, 4 ,5)
+```
+Output:
+```Python
+(1, 2, 3, 4, 5)
+```
+
+Tupla vacía:
+```Python
+# An empty tuple
+empty_tuple = ()
+print (empty_tuple)
+```
+Output:
+```
+()
+```
+
+Tupla de un solo elemento:
+```Python
+tupla = (1,)
+print(tupla)
+print(type(tupla))
+```
+
+Output:
+```
+(1,)
+<class 'tuple'>
+```
+
+Tuplas anidadas:
+
+En Python se pueden crear tuplas que contengas otras tuplas como elementos de estas.
+
+**Ejemplo:**
+
+```Python
+# Code for creating nested tuples
+tuple1 = (0, 1, 2, 3, 4)
+tuple2 = ('Python', 'C++', 'C#', 'F#', 'Haskell')
+tuple3 = (tuple1, tuple2)
+print(tuple3)
+```
+
+Output:
+```
+((0, 1, 2, 3, 4), ('Python', 'C++', 'C#', 'F#', 'Haskell'))
+```
+
+**Acceder a un elemento de la tupla:**
+Para acceder al valor de un elemento de la tupla se usan los corchetes con el índice del elemento que se desea obtener su valor.
+
+```Python
+tupla = (1, 2, 3)
+print(tupla[1])
+```
+
+Output:
+```
+2
+```
+**Concatenación de Tuplas:**
+```Python
+t1 = ('this', 'world', 'game')
+t2 = ('bit', 'code', 'terminal')
+t3 = t1 + t2
+print(t3)
+```
+Output:
+```
+('this', 'world', 'game', 'bit', 'code', 'terminal')
+```
+
+**Crear tupla con repetición:**
+
+Ejemplo:
+
+```
+tupla = ('Python',)*5
+print(tupla)
+```
+Output:
+```
+('Python', 'Python', 'Python', 'Python', 'Python')
+```
+
+**Código para testear que las tuplas en Python son inmutables:**
+
+```Python
+#code to test that tuples are immutable
+tupla = (-8, 1, 12, 3)
+tupla[1] = 2
+print(tupla)
+```
+Output:
+
+```
+tupla[1] = 2
+TypeError: 'tuple' object does not support item assignment
+```
+
+**Slicing en Tuplas:**
+ 
+ Podemos hacer slicing en listas de la forma que lo hacemos en strings o listas. Tuple slicing es básicamente usado para obtener un rango de items de esta. Para hacer el slicing en tuplas usamos el operador de slicing. El operador slicing es representado con las sintaxis [start:stop:step]. El step se puede omitir por defecto es 1.
+
+ Ejemplo1:
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[1:3])
+```
+
+Output:
+```
+(3, 45)
+```
+
+**Ejemplo2 Si se omite star value por defecto comienza en el primer elemento:**
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[:4])
+```
+
+Output:
+```
+(12, 3, 45, 4)
+```
+
+**Ejemplo3 Si se omite el stop value por defecto termina en el último elemento:**
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[3:])
+```
+
+Output:
+```
+(4, 2.4, 2, 56, 90, 1)
+```
+**Ejemplo4 Si se omite el star y el stop value comienza en el primer elemento y términa en el último elemento:**
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[:])
+```
+
+Output:
+```
+(12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+```
+
+**Ejemplo5 Imprimir del primer al último con un paso de 2:**
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[::2])
+```
+
+Output:
+```
+(12, 45, 2.4, 56, 1)
+```
+
+**Ejemplo6 Puedes usar índices negativos si quieres imprimir índices desde el final:**
+
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[-3:-1])
+```
+
+Output:
+```
+(56, 90)
+```
+
+**Eliminar una tupla:**
+
+```Python
+# Code for deleting a tuple
+tupla = (0, 1)
+del tupla
+print(tupla)
+```
+Output:
+```
+UnboundLocalError: local variable 'tupla' referenced before assignment
+```
 
