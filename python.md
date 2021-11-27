@@ -611,3 +611,24 @@ print(multOutput(5))
 (25, 10)
 ```
 
+ # Redefinición de operadores:
+
+
+Operadores binarios:
+
+operador | magic method 
+--------|----------
+  \+	|  \_\_add\_\_(self, other)  
+  –	    | __sub\_\_(self, other)
+ /	    | \_\_truediv__(self, other)  
+ //	    |\_\_floordiv__(self, other)
+ %	    | \_\_mod__(self, other)
+ %	    | \_\_mod__(self, other)
+ **	    | \_\_pow__(self, other)
+ \>>	| \_\_rshift__(self, other)
+ <<	    | \_\_lshift__(self, other)
+ &	    | \_\_and__(self, other)
+ \|	    | \_\_or__(self, other)
+ ^	    | \_\_xor__(self, other)
+
+ 
