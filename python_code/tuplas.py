@@ -41,6 +41,25 @@ def testInmutableTupla():
     tupla[1] = 2
     print(tupla)
 
+def slicingExample1():
+    tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+    print(tupla[1:3])
+    print(tupla[:4])
+    print(tupla[3:])
+    print(tupla[:])
+    print(tupla[::2])
+    print(tupla[-3:-1])
+
+def eliminarTula():
+    # Code for deleting a tuple
+    tupla = (0, 1)
+    del tupla
+    print(tupla)
+
+def accederElem():
+    tupla = (1, 2, 3)
+    print(tupla[1])
+
 conParen()
 sinParen()
 empty()
@@ -49,4 +68,6 @@ NestedTule()
 exampleConcat()
 repeticion()
 
-testInmutableTupla()
+slicingExample1()
+# eliminarTula()
+accederElem()

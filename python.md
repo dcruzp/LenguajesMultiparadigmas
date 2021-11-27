@@ -404,6 +404,18 @@ Output:
 ((0, 1, 2, 3, 4), ('Python', 'C++', 'C#', 'F#', 'Haskell'))
 ```
 
+**Acceder a un elemento de la tupla:**
+Para acceder al valor de un elemento de la tupla se usan los corchetes con el índice del elemento que se desea obtener su valor.
+
+```Python
+tupla = (1, 2, 3)
+print(tupla[1])
+```
+
+Output:
+```
+2
+```
 **Concatenación de Tuplas:**
 ```Python
 t1 = ('this', 'world', 'game')
@@ -445,4 +457,91 @@ TypeError: 'tuple' object does not support item assignment
 ```
 
 **Slicing en Tuplas:**
+ 
+ Podemos hacer slicing en listas de la forma que lo hacemos en strings o listas. Tuple slicing es básicamente usado para obtener un rango de items de esta. Para hacer el slicing en tuplas usamos el operador de slicing. El operador slicing es representado con las sintaxis [start:stop:step]. El step se puede omitir por defecto es 1.
+
+ Ejemplo1:
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[1:3])
+```
+
+Output:
+```
+(3, 45)
+```
+
+**Ejemplo2 Si se omite star value por defecto comienza en el primer elemento:**
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[:4])
+```
+
+Output:
+```
+(12, 3, 45, 4)
+```
+
+**Ejemplo3 Si se omite el stop value por defecto termina en el último elemento:**
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[3:])
+```
+
+Output:
+```
+(4, 2.4, 2, 56, 90, 1)
+```
+**Ejemplo4 Si se omite el star y el stop value comienza en el primer elemento y términa en el último elemento:**
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[:])
+```
+
+Output:
+```
+(12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+```
+
+**Ejemplo5 Imprimir del primer al último con un paso de 2:**
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[::2])
+```
+
+Output:
+```
+(12, 45, 2.4, 56, 1)
+```
+
+**Ejemplo6 Puedes usar índices negativos si quieres imprimir índices desde el final:**
+
+
+```Python
+tupla = (12, 3, 45, 4, 2.4, 2, 56, 90, 1)
+print(tupla[-3:-1])
+```
+
+Output:
+```
+(56, 90)
+```
+
+**Eliminar una tupla:**
+
+```Python
+# Code for deleting a tuple
+tupla = (0, 1)
+del tupla
+print(tupla)
+```
+Output:
+```
+UnboundLocalError: local variable 'tupla' referenced before assignment
+```
 
