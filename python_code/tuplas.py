@@ -60,6 +60,16 @@ def accederElem():
     tupla = (1, 2, 3)
     print(tupla[1])
 
+def distintosTipos():
+    tupla = ("cat", 1, (1,2), "dog", 20.4)
+    print(tupla)
+
+def multOutput(n: int):
+    if n%2 == 0:
+        return 2*n, 3*n
+    return n*n, n + n
+
+
 conParen()
 sinParen()
 empty()
@@ -71,3 +81,6 @@ repeticion()
 slicingExample1()
 # eliminarTula()
 accederElem()
+distintosTipos()
+
+print(multOutput(5))

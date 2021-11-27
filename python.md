@@ -545,3 +545,69 @@ Output:
 UnboundLocalError: local variable 'tupla' referenced before assignment
 ```
 
+__Haskell__:
+En Haskell las tuplas se representan con paréntisis y cada elemento separado por comas similar a Python:
+```Haskell
+Prelude> let a = (4, 5, 6, 7)
+Prelude> a
+(4,5,6,7)
+Prelude> :t a
+a :: (Num a, Num b, Num c, Num d) => (a, b, c, d)
+
+```
+
+ Las tuplas en Haskell pueden contener distintos tipos al igual que en Python:
+
+Haskell Code:
+```Haskell
+Prelude> let a = ("cat", 1, (1,2), "dog", 20.4)
+Prelude> a
+("cat",1,(1,2),"dog",20.4)
+Prelude> :t a
+a :: (Fractional e, Num b1, Num a, Num b2) =>
+     ([Char], b1, (a, b2), [Char], e)
+
+```
+
+Python Code:
+```Python
+tupla = ("cat", 1, (1,2), "dog", 20.4)
+print(tupla)
+```
+Output:
+```
+(1, 'lion', 'north', 'plane', 'move', 1.2)
+```
+
+En Haskell las tuplas se pueden usar si se quiere retornar más de un valor de una función. Algo que también se puede hacer en Python
+
+Ejemplo:
+```Haskell
+moreonereturn :: Integral a => a -> (a, a)
+moreonereturn x | even x   = (2*x, 3*x)
+                | otherwise = (x*x, x+x)
+```
+
+Python:
+```Python
+def multOutput(n: int):
+if n%2 == 0:
+    return 2*n, 3*n
+return n*n, n + n
+```
+
+Probemos para n = 5
+
+Haskell Output:
+```
+*Main> moreonereturn 5
+(25,10)
+```
+Python Output:
+```Python
+print(multOutput(5))
+```
+```
+(25, 10)
+```
+
