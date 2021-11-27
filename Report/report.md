@@ -214,5 +214,278 @@ IEnumerable<string> extract = fooList.Where((foo, index) => foo.Bar > 10 + index
                                      .Select(foo => foo.Name.ToUpper());
 ```
 
+Tambien existe `List<T>.ConvertAll` que se comporta igual que las *list Comprehension* realizando la misma operacion en cada elemento de una lista existente y luego devolviendo una nueva coleccion. Esta es una alternativa al uso de `Linq`, especialmente si se esta usando .NET 2.0 . En el ejemplo siguiente se muestra como usar esta con C# 3.0 pasando una funcion lambda especificando la funcion de mapeo que se necesita.  
 
+```c#
+var foo = new List<int> {1,2,3}; 
+var bar = foo.ConvertAll (x => x * 2);  //list comprehension 
+Console.WriteLine(string.Join(" ", bar)) // should print 2,4,6
+```
+
+Para C# 2.0, tu puedes usar un metodo anonimo con el `delegate`  `Convert`  para hacer algo parecido. 
+
+```c#
+List<int> foo = new List<int> (new int[]{1,2,3}); 
+var bar = foo.ConvertAll(new Converter<int, int>(delegate (int x) { return x * 2; }));
+Console.WriteLine(string.Join(" ", bar));
+```
+
+ Esto se puede aplicar no solo a listas , tambien se pueden usar `Arrays` usando `Array.ConvertAll` 
+
+### Inferencia de Tipos en C# 
+
+La inferencia de tipos es un proceso por el cual el compilador determina el tipo de una variable local que ha sido declarada sin una declaracion explicita de su tipo. El tipo es inferido a partir del valor inicial provisto a la variable. Para que el algoritmo de inferencia de tipos funciones es necesaria una entrada, que es el contenido de la variable. Si no inicializamos la variable a inferir tendremos un error de compilacion. La inferencia de tipos en C# se puede implementar haciendo uso de la palabra reservada `var` . la sintaxis para declarar una variable haciendo uso de la inferencia de tipos seria asi: 
+
+```c#
+var x = new ArrayList(); 
+```
+
+en este caso el compilador determino que la variable `x` es del tipo `ArrayList` , pese a que en ningun momento se ha declarado su tipo explicitamente. 
+
+La inferencia de tipos por valor generaliza al tipo mas implicito y optimzado del .Net Framework. Como el framework optimiza la performance para tipos enteros de 32-bits (System.Int32 y System.UInt32) un valor de 0,10 o de 100 que perfectamente podrian inferirse como `System.Byte` se infiere como system.Int32. Incluso se recomienda usar los tipos enteros para contradores (aunque contemos del 0 al 10) y variables enteras de acceso frecuente, ya que la performance en tiempo de ejecucion del tipo entero es preferible al storage en RAM que ahorramos si declaramos varaibles como `System.SByte`, `System.Byte` y `System.Int16`. De la misma manera, con valores de punto flotante si declaramos una variable con un valor de 3.14 sera inferida al tipo `System.Double` y no como System.Single(float) que perfectamente se la puede contener. La razon es que las operaciones con System.Double son optimizadas por hardware. Solo se infiere a un tipo no optimizado por el Framework(como System.Int64 o System.Decimal)  si el valor de la variable esta fuera del rango de los tipos optimizados. Si por ejemplo queremos que se infiera el valor 3.14 como float en vez de double, debemos proporcionar cierta evidencia que ayude al compilador a inferirlo como float. 
+
+``` c#
+var inferredType = (float)3.14  // casting explicito 
+var inferredType = 3.14f        // notacion sufijo 
+```
+
+Entonces resumiendo la inferencia de tipos no se resuelve utilizando mecanismo de codigo dinamico, que afecten la performance en tiempo de ejecucion. La inferencia de tipos se resuelve en tiempo de compilacion, por lo tanto existe un costo en tiempo de compilacion, ese tiempo es el tiempo que terad el algoritmo de inferencia en sintetizar una expresion y resolver el tipo de una variable.  La inferencia de tipos tanto de valor como de referencia es para variable locales de metodos. No se aplica para variables de clases, propiedades, parametros ni valores de retorno. La inferencia de tipos no es mas que azucar sintacica, una manera comoda y agil de delcarar variables locales.
+
+
+
+### Tuplas en C# 
+
+Las tuplas se crea utilizando los tipos genericos `Tuple<T1>`  - `Tuple<T1,T2,T3,T4,T5,T6,T7,T8>`. Cada uno de los tipos representa una tupla que contiene de 1 a 8 elementos. Los tipos pueden ser de diferente tipos.
+
+```c#
+//tuple with 4 element
+var tuple = new Tuple<string, int, bool, MyClass>("foo", 123, true, new MyClass());
+```
+
+Las tuplas tambien se pueden crear usando metodos estaticos de `Tuple.Create` .En este caso los tipos de los elementos son inferidos por el compilador de C#. 
+
+```c#
+// tuple with 4 elements
+var tuple = Tuple.Create("foo", 123, true, new MyClass()); 
+```
+
+Desde C# 7.0 las tuplas se pueden crear facilmente usando  `ValueTuple`. 
+
+```c#
+var tuple = ("foo", 123, true, new MyClass()); 
+```
+
+Para acceder a los elementos de una tupla se utiliza `item1`- `item8` proopiedades. Solos las propiedades con numeros de indices menor o igual al tamano de las tupla estaran disponibles (es decir, no se puede acceder a las propiedad `Item3` en `Tuple<T1,T2>`). 
+
+```c#
+var tuple = new Tuple<string, int, bool, MyClass>("foo", 123, true, new MyClass());
+var item1 = tuple.Item1; // "foo"
+var item2 = tuple.Item2; // 123
+var item3 = tuple.Item3; // true
+var item4 = tuple.Item4; // new My Class()
+```
+
+Las tuplas se pueden comparar en funcion de sus elementos. Como ejemplo, un enumerable cuyos elementos son del tiplo `Tuple` puede ordenarse en funcion de los operadores de comparacion definidos en un elemeto especifico: 
+
+```c#
+List<Tuple<int, string>> list = new List<Tuple<int, string>>();
+list.Add(new Tuple<int, string>(2, "foo"));
+list.Add(new Tuple<int, string>(1, "bar"));
+list.Add(new Tuple<int, string>(3, "qux"));
+
+list.Sort((a, b) => a.Item2.CompareTo(b.Item2)); //sort based on the string element
+
+foreach (var element in list) {
+    Console.WriteLine(element);
+}
+
+// Output
+// (1, bar) 
+// (2, foo) 
+// (3, qux)
+```
+
+Las tuplas se pueden usar para devolver multiples valores de un metodo sin usar parametros. En el siguiente ejemplo, *AddMultiply* se usa para devolver dos valores(suma, producto). 
+
+```c#
+void Write()
+{
+    var result = AddMultiply(25, 28);
+    Console.WriteLine(result.Item1);
+    Console.WriteLine(result.Item2);
+}
+
+Tuple<int, int> AddMultiply(int a, int b)
+{
+    return new Tuple<int, int>(a + b, a * b);
+}
+// output:
+// 53 
+// 700
+```
+
+ Uno de los casos mas comunes de los usos de casos de las tuplas es como tipo de retorno de metodo. Es decir en lugar de definir los parametros del metodo, puede agrupar los resultados del metodo en un tipo de retorno de tupla, como muestra el siguiente ejemplo: 
+
+```c#
+var xs = new [] {4,7,9};
+var limits = FindMinMax(xs); 
+Console.WriteLine($"Limits of [{string.Join(" ", xs)}] are {limits.min} and {limits.max}");
+// Output:
+// Limits of [4 7 9] are 4 and 9
+
+var ys = new[] { -9, 0, 67, 100 };
+var (minimum, maximum) = FindMinMax(ys);
+Console.WriteLine($"Limits of [{string.Join(" ", ys)}] are {minimum} and {maximum}");
+// Output:
+// Limits of [-9 0 67 100] are -9 and 100
+
+(int min , int max ) FindMinMax(int[] input)
+{
+    // ... code here
+}
+```
+
+En el ejemplo anterior se puede ver como se puede trabajar con la tupla retornada directamente o desonstruyentdo esta en variables separadas. 
+
+Se puede especificar explicitamente el nombre de cada uno de los campos de la inicializacion de la tupla o la definicion de el tipo de tupla, como se muestra en el siguiente ejemplo: 
+
+```c#
+var t = (Sum: 4.5, Count: 3);
+Console.WriteLine($"Sum of {t.Count} elements is {t.Sum}.");
+
+(double Sum, int Count) d = (4.5, 3);
+Console.WriteLine($"Sum of {d.Count} elements is {d.Sum}.");
+```
+
+Con C# 7.1 si no se especifica el nombre de los campo, estos se van a inferir del nombre de la variable correspondiente en la expresion de inicializacion de la tupla. como se muestra en la tupla siguiente: 
+
+```c#
+var sum = 4.5;
+var count = 3;
+var t = (sum, count);
+Console.WriteLine($"Sum of {t.count} elements is {t.sum}.");
+```
+
+Eso se conoce como iniciadores de proyeccion de tuplas. El nombre de una variables no se proyecta en un nombre de campo de tuplas en los siguientes casos: 
+
+ - el nombre del candidato es un nombre del miembro de un tipo de tupla, por ejemplo `Item3`, `ToString` o `Rest` 
+ - el nombre del candidato es un duplicado de otro nombre de campo de tupla, ya sea explicito o implicito
+
+En esos casos, especifica explicitamente el nombre de un campo o acceder a un campo por su nombre predeterminado. 
+
+El nombre por defecto de los campos de las tuplas son `Item1`, `Item2`, `Item3` y asi sucesivamente. Siempre se puede usar el nombre por defecto de un campo. Incluso cuando el nombre de un campo se especifica explicitamente o se infiere, como lo muestra el siguiete ejemplo: 
+
+```c#
+var a = 1;
+var t = (a, b: 2, 3);
+Console.WriteLine($"The 1st element is {t.Item1} (same as {t.a}).");
+Console.WriteLine($"The 2nd element is {t.Item2} (same as {t.b}).");
+Console.WriteLine($"The 3rd element is {t.Item3}.");
+// Output:
+// The 1st element is 1 (same as 1).
+// The 2nd element is 2 (same as 2).
+// The 3rd element is 3.
+```
+
+La asignacion de tuplas y las comparaciones de igualdad de tuplas no tienen en cuenta los nombre de campos. en tiempo de compilacion, el compilador remplaza los nombres de los campos que no son por defecto con los correspondientes nombres por defecto. Como resultado, los nombres de los campos explicitamente especificados o inferidos no estan disponibles en tiempo de ejecucion. 
+
+C# soporta la asignacion entre tipos de tuplas que satisfacen las dos condiciones siguientes: 
+
+ - ambos tipos de tuplas tienen el mismo numero de elementos
+ - por cada posicion en la tupla, el tipo de la tupla de la derecha es el mismo o se puede convertir implicitamente al tipo que le corresponde al elemento de lado izquierdo
+
+Los valores de los elementos de la tupla son asignados siguiendo el orden de los elementos de la tupla. El nombre de los campos de las tuplas son ignorados y no asignados, como se muestra en el siguiente ejemplo: 
+
+```c#
+(int, double) t1 = (17, 3.14);
+(double First, double Second) t2 = (0.0, 1.0);
+t2 = t1;
+Console.WriteLine($"{nameof(t2)}: {t2.First} and {t2.Second}");
+// Output:
+// t2: 17 and 3.14
+
+(double A, double B) t3 = (2.0, 3.0);
+t3 = t2;
+Console.WriteLine($"{nameof(t3)}: {t3.A} and {t3.B}");
+// Output:
+// t3: 17 and 3.14
+```
+
+Se puede usar el operador de asignacion `=` para *deconstruir* la instancia de una tupla en variables separadas. Se puede hacer de una de las siguientes maneras.
+
+ - Declarando explicitamente el tipo de cada variable dentro de parentesis: 
+
+   ```c#
+   var t = ("post office", 3.6);
+   (string destination, double distance) = t;
+   Console.WriteLine($"Distance to {destination} is {distance} kilometers.");
+   // Output:
+   // Distance to post office is 3.6 kilometers.
+   ```
+
+ - Usar la palabra reservada `var` fuera de los parentesis para declarar implicitamente los tipos de variables y dejar que le compilador infiera sus tipos. 
+
+   ```c#
+   var t = ("post office", 3.6);
+   var (destination, distance) = t;
+   Console.WriteLine($"Distance to {destination} is {distance} kilometers.");
+   // Output:
+   // Distance to post office is 3.6 kilometers.
+   ```
+
+ - Usar variables existentes: 
+
+   ```c#
+   var destination = string.Empty;
+   var distance = 0.0;
+   
+   var t = ("post office", 3.6);
+   (destination, distance) = t;
+   Console.WriteLine($"Distance to {destination} is {distance} kilometers.");
+   // Output:
+   // Distance to post office is 3.6 kilometers.
+   ```
+
+La igualdad entre tuplas con C# 7.3, los tipos de tuplas soportan los operadores de `==` y `!=` Esos operadores comparan los miembros del lado izquierdo del operador con los miembros correspondientes del lado derecho del operador siguiendo el orden de los elementos de la tupla. 
+
+```c#
+(int a, byte b) left = (5, 10);
+(long a, int b) right = (5, 10);
+Console.WriteLine(left == right);  // output: True
+Console.WriteLine(left != right);  // output: False
+
+var t1 = (A: 5, B: 10);
+var t2 = (B: 5, A: 10);
+Console.WriteLine(t1 == t2);  // output: True
+Console.WriteLine(t1 != t2);  // output: False
+```
+
+En el ejemplo anterior se muestra, las operaciones `==` y `!=` no tienen en cuenta los nombres de los campos de las tupas. 
+
+Dos tuplas son comparables cuando cuando cumplen las dos condiciones siguientes: 
+
+ - Ambas tuplas tienen el numero de elementos. 
+ - Por cada posiciones de la tupla, los elementos correspondientes de la parte izquierda y de la parte derecha de operador son comparables con los operadores `==` y `!=` 
+
+Tipicamente, se factoriza un metodo que tiene parametros `out` dentro de un metodo que retorna una tupla. Sin embargo hay casos en que un parametro `out`  puede ser de un tipo tupla. Los ejemplos siguientes muestran como trabajar con tuplas como parametros`out`.
+
+```c#
+var limitsLookup = new Dictionary<int, (int Min, int Max)>()
+{
+    [2] = (4, 10),
+    [4] = (10, 20),
+    [6] = (0, 23)
+};
+
+if (limitsLookup.TryGetValue(4, out (int Min, int Max) limits))
+{
+    Console.WriteLine($"Found limits: min is {limits.Min}, max is {limits.Max}");
+}
+// Output:
+// Found limits: min is 10, max is 20
+```
+
+  
+
+### Redefinicion de operadores en C# 
 
