@@ -25,9 +25,28 @@ def NestedTule():
     tuple3 = (tuple1, tuple2)
     print(tuple3)
 
+def exampleConcat():
+    t1 = ('this', 'world', 'game')
+    t2 = ('bit', 'code', 'terminal')
+    t3 = t1 + t2
+    print(t3)
+
+def repeticion():
+    tupla = ('Python',)*5
+    print(tupla)
+
+def testInmutableTupla():
+    #code to test that tuples are immutable
+    tupla = (-8, 1, 12, 3)
+    tupla[1] = 2
+    print(tupla)
 
 conParen()
 sinParen()
 empty()
 tupOneElem()
 NestedTule()
+exampleConcat()
+repeticion()
+
+testInmutableTupla()

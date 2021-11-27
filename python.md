@@ -404,3 +404,45 @@ Output:
 ((0, 1, 2, 3, 4), ('Python', 'C++', 'C#', 'F#', 'Haskell'))
 ```
 
+**Concatenación de Tuplas:**
+```Python
+t1 = ('this', 'world', 'game')
+t2 = ('bit', 'code', 'terminal')
+t3 = t1 + t2
+print(t3)
+```
+Output:
+```
+('this', 'world', 'game', 'bit', 'code', 'terminal')
+```
+
+**Crear tupla con repetición:**
+
+Ejemplo:
+
+```
+tupla = ('Python',)*5
+print(tupla)
+```
+Output:
+```
+('Python', 'Python', 'Python', 'Python', 'Python')
+```
+
+**Código para testear que las tuplas en Python son inmutables:**
+
+```Python
+#code to test that tuples are immutable
+tupla = (-8, 1, 12, 3)
+tupla[1] = 2
+print(tupla)
+```
+Output:
+
+```
+tupla[1] = 2
+TypeError: 'tuple' object does not support item assignment
+```
+
+**Slicing en Tuplas:**
+
