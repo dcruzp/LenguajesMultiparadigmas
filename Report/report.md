@@ -489,3 +489,176 @@ if (limitsLookup.TryGetValue(4, out (int Min, int Max) limits))
 
 ### Redefinicion de operadores en C# 
 
+Un tipo definido por el programador puede sobrecargar un operador de C# predefinido. Un tipo puede proporcionar la implementacion personalizada de una operacion cuando uno o los dos operandos son de ese tipo. 
+
+Para sobrecargar un operador se usa la palabla clave `operator` . Una declaracion de operador debe cumplir con la siguiente reglas: 
+
+ - Incluir los modificadores`public` y  `static`  
+ - Un operador unitario tiene un parametro de entrada. Un operador binario tiene dos parametros de entrada. En cada caso, al menos un parametro debe ser de tipo `T` o `T?` donde `T` es el tipo que contiene la declaracion del operador.
+
+En el ejemplo siguiente se muestra una estructura simplificada para representar un numero racional. La estructura sobrecarga alguno de los operadores aritmetico: 
+
+```c#
+using System;
+
+public readonly struct Fraction
+{
+    private readonly int num;
+    private readonly int den;
+
+    public Fraction(int numerator, int denominator)
+    {
+        if (denominator == 0)
+        {
+            throw new ArgumentException("Denominator cannot be zero.", nameof(denominator));
+        }
+        num = numerator;
+        den = denominator;
+    }
+
+    public static Fraction operator +(Fraction a) => a;
+    public static Fraction operator -(Fraction a) => new Fraction(-a.num, a.den);
+
+    public static Fraction operator +(Fraction a, Fraction b)
+        => new Fraction(a.num * b.den + b.num * a.den, a.den * b.den);
+
+    public static Fraction operator -(Fraction a, Fraction b)
+        => a + (-b);
+
+    public static Fraction operator *(Fraction a, Fraction b)
+        => new Fraction(a.num * b.num, a.den * b.den);
+
+    public static Fraction operator /(Fraction a, Fraction b)
+    {
+        if (b.num == 0)
+        {
+            throw new DivideByZeroException();
+        }
+        return new Fraction(a.num * b.den, a.den * b.num);
+    }
+
+    public override string ToString() => $"{num} / {den}";
+}
+
+public static class OperatorOverloading
+{
+    public static void Main()
+    {
+        var a = new Fraction(5, 4);
+        var b = new Fraction(1, 2);
+        Console.WriteLine(-a);   // output: -5 / 4
+        Console.WriteLine(a + b);  // output: 14 / 8
+        Console.WriteLine(a - b);  // output: 6 / 8
+        Console.WriteLine(a * b);  // output: 5 / 8
+        Console.WriteLine(a / b);  // output: 10 / 4
+    }
+}
+```
+
+
+
+#### Posibilidades de sobrecarga en C# 
+
+La tabla siguiente muestra las posibilidades de sobrecarga de los operadores en C# 
+
+| Operadores                                                   | Posibilida de sobrecarga                                     |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `+x`, `-x`, `!x`, `~x`, `++`, `--`, `true`, `false`          | Estos operadores unarios se pueden sobrecargar               |
+| `x + y`, `x-y`, `x * y`, `x / y`, `x % y`, `x & y`, `x ^ y`, `x << y`, `x >> y`, `x == y`, `x != y`, `x < y`, `x > y`, `x <= y`, `x >= y`, `x|y` | No se pueden sobrecargar los operadores logicos condicionales, si un tipo con los operadores `true` o `false` sobrecargados, tambien sobrecarga al operador `&` o `|` de determinada manera, el operador `&&` o `||`, respectivamente, se puede evaluar para los operadores de este tipo. |
+| `a[i]` , `a?[i]`                                             | El acceso a un elemento no se considera un operador sobrecargable, pero puede definir un indexador. |
+| `(T)x`                                                       | No se puede convertir el operador de conversion, pero puede definirse conversiones de tipos personalizadas que pueden realizarse mediante una expresion de conversion |
+| `+=`, `-=`, `*=`, `/=`, `%=`, `&=` ,`^=`, `<<=`, `>>=` , `|=` | Los operadores de asignacion compuestos no pueden sobrecargarse explicitamente. Pero cuando se sobrecarga un operador binario, el operador de asignacion compuesto correspondiente , si lo hay, tambien se puede sobrecargar de modo implicito. Por ejemplo `+= `se evalua con `+` , que se pueden sobrecargar. |
+| `^x`, `x = y`, `x.y`, `x?.y`, `c ? t : f`, `x ?? y`, `x ??= y`, `x..y`, `x->y`, `=>`, `f(x)`, `as`, `await`, `checked`, `unchecked`, `default`, `delegate`, `is`, `nameof`, `new`,`sizeof`, `stackalloc`, `switch`, `typeof`,`with` | Estos operadores no se pueden sobrecargar                    |
+
+### Inmutabilidad en C# 
+
+Los tipos inmutables son esos que sus datos no pueden ser alterados despues de que se crea la instancia. En tipos inmutables se crea en una nuevo espacio de memoria y los valores modificados son guardados en una nueva memoria. 
+
+En C# los `string` son inmutables, que significa que se crea una nueva memoria cada vez que se altera el objeto, en vez de trabajar en el espacio de memoria donde ya existe la memoria. Esto se traduce en que cada vez que tratamos de modificar un string, un nuevo objeto va a ser referenciado donde va a estar el nuevo string y el espacio de memoria donde estaba el objeto anteriormente va a ser dereferenciado. Entonce si modificamos un strinf constantemente el numero de desreferenciacio a viejos objetos se incrementara y este proceso va a tener que esperar por el recolector de basura para liberar los espacios de memoria que han sido desreferenciados y la aplicacion va disminuir su rendimiento.    
+
+```c#
+string str = string.Empty
+for (int i = 0; i < 1000 ; i++)
+{
+    str += "string "
+}
+```
+
+En el codigo de arriba `str` va a ser actualizado 1000 veces dentro de un ciclo y cada vez que se ejecuta el ciclo se crean nuevas instancias , entonces las valores antiguos vas a ser tratados por el recolector de basura despues de algun tiempo. 
+
+No es una buena practica la solucion anterior, es mejor usar tipos mutables. En C# existen `StringBuilder` que es un tipo mutable. Esto significa que  siempre se usa la misma direccion de memoria para alterar el objeto, es decir se trabaja sobre la misma instancia, esto no va a crear ninguna instancia futura por lo tanto no va a disminuir el rendimiento de nuestra aplicacion. 
+
+```c#
+StringBuilder = strB = new StringBuilder(); 
+for (int i =0; i < 10000; i++)
+{
+    strB.Append("Modified "); 
+}
+```
+
+ En el codigo anterior, no tiene un impacto grande sobre la memoria porque este no crea instancia cada vez que se ejecuta el cuerpo del ciclo. 
+
+Para crear clases inmutables en C# , tenemos que pensar si sus propiedades o variabes no van a cambiar nunca sus valores despues que sean asigandos la primera vez. 
+
+Haciendo la varaible de solo lectura tal que no se pueda modificar la variable despues que se asigne la primera vez. Ejemplo: 
+
+```c#
+class MyClass
+{
+    private readonly string myStr;
+    
+    public MyClass(string str)
+    {
+        myStr = str;
+    }
+    
+    public string GetStr
+    {
+        get {return myStr;}
+    }
+}
+```
+
+En el codigo anterior se tiene un campo de solo lectura que es inicializado a travez del constructor de la clase. De esta manera se pueden crear la clases inmutables en C#
+
+En C# existe el `namespace` , `System.Collections.Inmmutable` que contiene  colecciones inmutables. Contiene inmutables versiones de `List`, `Dictionaries`, `Arrays` , `Hashes` `Stacks` y `Queues`  
+
+Por ejemplo `ImmutableStack<T>` puede ser usando para pushear y extraer elementos de la pila de la misma manera en que se hace con la implementaciones mutables de `Stack<T>` sin embargo `ImmutableStack<T>` es una coleccion inmutable, sus elementos no pueden ser alterados. Entonces cuando se hace una llamada a `pop`  para extraer un elemento de la pila, una nueva pila es creada y la pila original permanece inalterada.
+
+Vamos a ver el siguiente ejemplo, en este caso vamos a ver como se pueden pushear elementos dentro de una pila inmutable. 
+
+```c#
+var stack = ImmutableStack<int>.Empty;
+for(int i = 0; i < 10; i++)
+{
+    stack = stack.Push(i);
+}
+```
+
+El codigo siguiente muestra que los elementos de una pila inmutable no pueden ser alterado. 
+
+```c#
+var stack = ImmutableStack<int>.Empty;
+for(int i = 0; i < 10; i++)
+{
+	stack = stack.Push(i);
+}
+Console.WriteLine("No of elements in original stack:" + stack.Count());
+var newStack = stack.Pop();
+Console.WriteLine("No of elements in new stack: " + newStack.Count());
+Console.ReadKey();
+
+// No of elements in original stack: 10
+// No of elements in new stack: 9
+```
+
+Como se puede ver en el resultado anterior  la pila inmutable original (contine 10 elementos) no ha cambiado despues de la llamada al metodo `pop()`. En cambio una nueva pila inmutables es creada con 9 elementos  
+
+Las colecciones inmutables no tiene constructor pero se puede usar el metodo estatico `Create` como se muestra en el codigo a continuacion:
+
+```c#
+var list = ImmutableList.Create(1,2,3,4,5);
+```
+
+Si se quiere annadir o eliminar un elemento de esta coleccion, una nueva lista inmutable sera creada  y la lista original permanecera igual.
+
