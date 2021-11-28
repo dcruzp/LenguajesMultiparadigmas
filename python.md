@@ -613,8 +613,18 @@ print(multOutput(5))
 
  # Redefinición de operadores:
 
+Sobrecargar el operador significa 
+**Operadores binarios:**
 
-Operadores binarios:
+Sobrecargar un operador significa dar un significado extendido más allá de su significa operacional predefinido. Por ejemplo en Python el operador `+` es usado sumas dos enteros así como para concatenar dos cadenas o mezclar dos listas. Esto se puede hacer porque el operador `+` está sobrecargado por la clase `int` y la clase `str`.
+
+En `Python` podemos sobrecargar todos los operadores existentes pero no podemos crear uno nuevo. Para realizar la sobrecarga de operadores, Python proporciona alguna función especial o `función mágica` que se invoca automáticamente cuando se asocia con ese operador en particular. Por ejemplo, cuando usamos el operador `+`, el método mágico `__add__` se invoca de forma automática en donde la operación para el operador `+` ha 
+sido definida.
+Cuando usamos un operador en tipos de definidos por el usuario, automáticamente se invoca una función especial o función mágica asociada con ese operador. Cambiar el comportamiento del operador es tan sencillo como cambiar el comportamiento del método o función. Defines métodos en tus clases y los operadores funcionan de acuerdo al comportamiento definido en esos métodos. Cuando usamos el operador `+`, el método mágico `__add__` es invocado automáticamente en donde el operador `+` es definido. Allí, al cambiar el código de este método mágico, podemos darle un significado extra al opperador `+`.
+
+
+**Lista de operadores con los métodos mágicos para redefinirlos en Python:**
+
 
 operador | magic method 
 --------|----------
@@ -631,4 +641,78 @@ operador | magic method
  \|	    | \_\_or__(self, other)
  ^	    | \_\_xor__(self, other)
 
+ **Operadores de Comparación:**
+
+operador | magic method 
+--------|----------
+<       |	\_\_LT__(SELF, OTHER)
+\>	    |   \_\_GT__(SELF, OTHER)
+<=	    |   \_\_LE__(SELF, OTHER)
+\>=	    |   \_\_GE__(SELF, OTHER)
+==	    |   \_\_EQ__(SELF, OTHER)
+!=	    |   \_\_NE__(SELF, OTHER)
+
+**Operadores de asignación:**
+operador | magic method 
+--------|----------
+-=	|   \_\_ISUB__(SELF, OTHER)
++=	|   \_\_IADD__(SELF, OTHER)
+*=	|   \_\_IMUL__(SELF, OTHER)
+/=	|   \_\_IDIV__(SELF, OTHER)
+//=	|   \_\_IFLOORDIV__(SELF, OTHER)
+%=	|   \_\_IMOD__(SELF, OTHER)
+**=	|   \_\_IPOW__(SELF, OTHER)
+\>>=|   \_\_IRSHIFT__(SELF, OTHER)
+<<=	|   \_\_ILSHIFT__(SELF, OTHER)
+&=	|   \_\_IAND__(SELF, OTHER)
+|=	|   \_\_IOR__(SELF, OTHER)
+^=	|   \_\_IXOR__(SELF, OTHER)
+
+**Operadores unarios:**
+
+operador | magic method 
+--------|----------
+–	    |   \_\_NEG__(SELF, OTHER)
+\+	    |   \_\_POS__(SELF, OTHER)
+~	    |   \_\_INVERT__(SELF, OTHER)
+
+
+Ejemplo1:
+
+Definamos la siguiente clase para representar números complejos y las operaciones suma y resta entre estos.
+
+```Python
+class ComplexNumer:
+
+    def __init__(self, a, b):
+      self.a = a
+      self.b = b
+
+    def __add__(self, other: 'ComplexNumer'):
+        return ComplexNumer(self.a +other.a, self.b + other.b)
+
+    def __sub__(self, other: 'ComplexNumer'):
+        return ComplexNumer(self.a - other.a, self.b - other.b)
  
+
+    def __str__(self):
+        return f"{self.a} + {self.b}i"
+```
+
+Se podría hacer lo siguiente:
+
+```Python
+c1 = ComplexNumer(1, 2)
+c2 = ComplexNumer(4, 5)
+c3 = c1 + c2
+c4 = c1 - c2
+print(f"Suma: {c3}")
+print(f"Resta: {c4}")
+```
+
+Output:
+```
+Suma: 5 + 7i
+Resta: -3 + -3i
+```
+
