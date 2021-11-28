@@ -545,7 +545,7 @@ Output:
 UnboundLocalError: local variable 'tupla' referenced before assignment
 ```
 
-__Haskell__:
+# Comparación con Haskell:
 En Haskell las tuplas se representan con paréntisis y cada elemento separado por comas similar a Python:
 ```Haskell
 Prelude> let a = (4, 5, 6, 7)
@@ -716,7 +716,7 @@ Suma: 5 + 7i
 Resta: -3 + -3i
 ```
 
-# Haskell:
+# Comparación con Haskell:
 
 En Haskell también se puede hacer sobrecarga de operadores a tipos definidos usando type classes.
 
@@ -745,3 +745,121 @@ Terna (-3,-3,-3)
 *Main> Terna(1,2,3) - Terna(4,5,6)
 Terna (-3,-3,-3)
 ```
+
+# Inmutabilidad:
+
+La mutabililidad es una propiedad diferenciadora de los tipos de datos en Python que hacen un gran contraste con los otros tipos de datos. Tiendo a ser la capacidad de los tipos de datos que permiten que se modifiquen después de su creación, a lo que se puede extraer un valor y también extraer de él.
+Por otro lado, también hay objetos que no siguen este principio y que son inalterables, sin permitir modificación después de su definición. Su estado no puede cambiar en absoluto tiende a representar un valor constante una vez inicializado. Por ejemplo, integer, string, float, Tuple, Frozen set.
+Por lo tanto si alguna variable ha inicializado un valor correspondiente a cualquiera de estos tipos de datos inmutables, no se puede cambiar nunca.
+
+
+
+
+**Strings son inmutables**
+
+
+```Python
+cadena = 'Inmutability in Python'
+cadena[1] = 'a'
+print(cadena)
+```
+**Error:**
+```
+cadena[1] = 'a'
+TypeError: 'str' object does not support item assignment
+```
+
+**Las tuplas son inmutables:**
+
+```Python
+tupla = (1,4,5)
+tupla[1] = 2
+print(tupla)
+```
+
+**Error:**
+```
+tupla[1] = 2
+TypeError: 'tuple' object does not support item assignment
+```
+
+**Los frozenset en Python son inmutables:**
+
+```Python
+elems = [1,4,5,6,8]
+froz = frozenset(elems)
+froz[0] = 2
+print(froz)
+```
+**Error:**
+```
+froz[0] = 2
+TypeError: 'frozenset' object does not support item assignment
+```
+
+**Creando tus propios tipos inmutables heredando de tuple:**
+
+```Python
+class MyImmutable(tuple):
+
+    def __new__(cls, a, b):
+        return tuple.__new__(cls, (a, b))
+
+    @property
+    def a(self):
+        return self[0]
+
+    @property
+    def b(self):
+        return self[1]
+
+    def __str__(self):
+        return f"->MyImmutable {self.a}, {self.b}<-"
+
+    def __setattr__(self, *ignored):
+        raise NotImplementedError
+
+    def __delattr__(self, *ignored):
+        raise NotImplementedError
+```
+
+```Python
+a = MyImmutable(1,2)
+a[0] = 2
+print(a[0])
+```
+**Error:**
+```
+    a[0] = 2
+TypeError: 'MyImmutable' object does not support item assignment
+
+```
+**Comparación con Haskell:**
+
+Las expresiones en Haskell son inmutables. No pueden cambiar después que son evaluados. La inmutabilidad hace que la refactorización sea mucho más fácil y que el código sea mucho más sencillo de razonar.
+Para combiar un objeto la mayoría de las estructuras de datos proporcionan métodos que toman el objeto antiguo y crean una nueva copia.
+
+```Haskell
+data Person a = Person{firstname:: String  , lastname::String} deriving(Show)
+
+
+changeLastName :: Person a1 -> String -> Person a2
+changeLastName person newLastname = person
+{ lastname = newLastname }
+```
+
+```
+*Main> let p1 = Person{firstname="David", lastname="De Quesada"}
+*Main> p1
+Person {firstname = "David", lastname = "De Quesada"}
+```
+```
+*Main> changeLastName p1 "Gonzalez"
+Person {firstname = "David", lastname = "Gonzalez"}
+```
+Como se puede observar changeLastName no modifica el objeto p1 Person sino que crear un nuevo Person con los nuevos valores de firstname y lasname
+```
+*Main> p1
+Person {firstname = "David", lastname = "De Quesada"}
+```
+
