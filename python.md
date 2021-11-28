@@ -716,3 +716,32 @@ Suma: 5 + 7i
 Resta: -3 + -3i
 ```
 
+# Haskell:
+
+En Haskell también se puede hacer sobrecarga de operadores a tipos definidos usando type classes.
+
+```Haskell
+newtype Terna a b c = Terna (a,b,c)  deriving (Eq,Show) 
+
+instance (Num a,Num b, Num c) => Num (Terna a b c) where
+    Terna (a,b,c) + Terna (d,e,f) = Terna (a+d,b+e,c+f)
+    Terna (a,b,c) - Terna (d,e,f) = Terna (a-d,b-e,c-f)
+    Terna (a,b,c) * Terna (d,e,f) = Terna (a*d,b*e,c*f)
+    abs (Terna (a,b,c)) = Terna(abs a, abs b, abs c)
+    signum (Terna (a,b,c)) = Terna(signum a, signum b, signum c)
+    fromInteger i = Terna (fromInteger i, fromInteger i, fromInteger i)
+```
+
+```
+*Main> Terna(1,2,3) + Terna(4,5,6)
+Terna (5,7,9)
+```
+```
+*Main> Terna(1,2,3) - Terna(4,5,6)
+Terna (-3,-3,-3)
+```
+
+```
+*Main> Terna(1,2,3) - Terna(4,5,6)
+Terna (-3,-3,-3)
+```
