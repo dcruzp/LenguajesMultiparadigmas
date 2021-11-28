@@ -2,6 +2,46 @@
 
 [TOC]
 
+### Funciones como ciudadanos de primera clase 
+
+Cuando se habla del termino cuidadano de primera clase, se refiera a que es un valor que puede ser asignado a variables, pasado como paramentro o devuelto como resultado de una funcion. C# tambien tiene `delegates` que basicamente son tipos a los que se los que se les puede asignar cualquier tipo metodo que coincida con su declaracion (parametros, tipos de datos y valor de retorno) 
+
+```c#
+Func<int,int> square = (x) => {return x * x };
+Func<A,C> Compose<A<B<C>(Func<A,B> f , Func<B,C> g)
+{
+    return x => g(f(x)); 
+}
+Func<string,int> f1 = (str) =>{
+    return str == "first" ? 1 : 0; 
+};
+Func<int,bool> f2 = (x) => {
+    return x == 1; 
+};
+Func fComposed = Compose(f1,f2);
+
+fComposed("second") // false 
+```
+
+En el ejemplo anterior la funcion `Compose` toma como parametro dos funciones que toman un parametro y regresan un valor. Regresa una funcion que toma un parametro del tipo que recibe el primer parametro y regres un valor del tipo del valor de retorno del segundo parametro. 
+
+Usando delegates tambien se tiene un comportamiento con la misma funcionalidad que vimos anteriormente. 
+
+```c#
+public delegate void Del (string message);
+
+public static void DelegateMethod (string message)
+{
+    System.Console.WriteLine(message);
+}
+
+Del handler = DelegateMethod; 
+
+handler("Hello World");
+
+// Hello World
+```
+
 
 
 ### Capacidades de pattern matching en C# 
