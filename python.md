@@ -348,6 +348,72 @@ Genera una lista donde los elementos donde los elementos sean de la forma expr, 
 `qualifiers`: puede tener 3 formas diferentes : `generators`, `filters`, `local definitions`
 
 
+Generator Qualifiers:
+Genera un número de elementos que se pueden usar en la parte de expression de la list comprehension.
+
+Sintaxis:
+```
+pattern <- list_expr
+```
+Ejemplo1:
+```
+Prelude> [n|n<-[1..5]]
+[1,2,3,4,5]
+```
+
+Ejemplo2:
+```
+Prelude> [(n,n*n) | n<-[1..3]]
+[(1,1),(2,4),(3,9)]
+```
+
+**Filter Qualifiers:**
+
+Un filter es una expresión booleana que remueve elementos que de otro modo se habrían incluido en la list comprehension. A menudo usamo un `generator` para para producir una secuencia de elementos y un `filter` para eliminar los elementos que no son necesarios.
+
+Ejemplo1:
+
+```
+Prelude> [n*n | n<-[1..10], even n]
+[4,16,36,64,100]
+```
+ Ejemplo2:
+```
+ Prelude> [(n,n*n) | n<-[1..3], n <n*n]
+[(2,4),(3,9)]
+```
+
+**Local Definitions:**
+
+Podemos definir una variable local dentro de la list comprehension
+
+Ejemplo1:
+```
+Prelude> [n*n | let n = 2]
+[4]
+```
+
+Ejemplo2:
+```
+Prelude> [k*n | k <- [5,10..50],let n = 2]
+[10,20,30,40,50,60,70,80,90,100]
+```
+
+Otros ejemlos de List comprehension en Haskell:
+
+```Haskell
+triads :: (Num c, Eq c, Enum c) => c -> [(c, c, c)]
+triads n = [ (x,y,z) | x <- [1..n], y <- [1..n], z <- [1..n], x^2 + y ^2 == z^2]
+```
+
+```
+*Main> triads 5
+[(3,4,5),(4,3,5)]
+*Main> triads 10
+[(3,4,5),(4,3,5),(6,8,10),(8,6,10)]
+```
+
+
 # Tuplas:
 
 Las tuplas en Python son una colección de objetos separados por , . Las tuplas en Python o tuples son muy similares a las listas, pero con dos diferencias. Son inmutables, lo que significa que no pueden ser modificadas una vez declaradas, y en vez de inicializarse con corchetes se hace con (). 
