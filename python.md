@@ -399,7 +399,7 @@ Prelude> [k*n | k <- [5,10..50],let n = 2]
 [10,20,30,40,50,60,70,80,90,100]
 ```
 
-Otros ejemlos de List comprehension en Haskell:
+**Otros ejemlos de List comprehension en Haskell:**
 
 ```Haskell
 triads :: (Num c, Eq c, Enum c) => c -> [(c, c, c)]
