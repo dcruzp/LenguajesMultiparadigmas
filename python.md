@@ -80,6 +80,32 @@ print(operations[0](3)) ##=> 9
 print(operations[1](7)) ##=>343
 ```
 
+# Comparando con Haskell:
+
+En Haskell las funciones son  tratadas como ciudadanos de primera clase. Esto significa que las funciones pueden almacenarse en estructura de datos , pasarse como argumento a otras funciones y devolverse como resultado.
+
+Ejemplo1:
+
+La función mymap: toma como argumentos una función y una lista y devuelve como resultado la
+lista que contiene la evaluación de la función en cada uno de los elementos de la lista de entrada.
+
+```Haskell
+mymap :: (a -> b) -> [a] -> [b]
+mymap _ [] = []
+mymap f (x:xs) = f x : mymap f xs
+```
+
+Definamos otra función sencilla para probabr mymapp:
+```
+doble :: Num a => a -> a
+doble x = x *2
+```
+
+```
+*Main> mymap doble [1,2,3,4,5]
+[2,4,6,8,10]
+```
+
 ## List comprehension 
 
 Uno de los aspectos más distintivos de Python son las list y las list comprehension feature, que pueden usarse en una línea de código construir funcionalidades poderosas.
@@ -942,4 +968,8 @@ Como se puede observar changeLastName no modifica el objeto p1 Person sino que c
 *Main> p1
 Person {firstname = "David", lastname = "De Quesada"}
 ```
+
+# Pattern matching:
+
+
 
