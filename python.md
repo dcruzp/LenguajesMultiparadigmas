@@ -333,7 +333,21 @@ Puntos importantes de las list comprehension en Python:
 * La list comprehension son un medio eficaz de describir y construir listas basadas en listas actuales
 * Generalmente las list comprehension son una forma más liviana para crear listas que la forma estándar con funciones y ciclos.
 * Cada list comprehension puede ser reescrita en un ciclo for, ero en el contexto de interpretación de listas, no se puede reescribir cada bucle for.
-  
+
+# Comparación con Haskell:
+
+Haskell tiene una notación llamada list comprehension que es muy conveniente para describir ciertos tipos de listas. 
+Las sintaxis básica de una list comprehension en Haskell es:
+```
+[expr | qualifier, qualifier, ...]
+```
+Genera una lista donde los elementos donde los elementos sean de la forma expr, de manera que los elementos cumplan las condiciones en los qualifiers.
+
+`expression`: puede ser cualquier expresión válida de Haskell
+
+`qualifiers`: puede tener 3 formas diferentes : `generators`, `filters`, `local definitions`
+
+
 # Tuplas:
 
 Las tuplas en Python son una colección de objetos separados por , . Las tuplas en Python o tuples son muy similares a las listas, pero con dos diferencias. Son inmutables, lo que significa que no pueden ser modificadas una vez declaradas, y en vez de inicializarse con corchetes se hace con (). 
