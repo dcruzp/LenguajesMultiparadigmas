@@ -2,6 +2,7 @@
 
 
 
+# a. Funciones como ciudadanos de primer nivel en Python
 
 
 El concepto funciones como ciudadanos de primera clase manda que las funciones son tratados como ciudadanos de primera clase: almacenadas en variables o es una estructura de datos, pasadas o devueltas como variables por una función.
@@ -109,6 +110,8 @@ doble x = x *2
 *Main> mymap doble [1,2,3,4,5]
 [2,4,6,8,10]
 ```
+
+# b. List comprehension en Python
 
 ## List comprehension 
 
@@ -443,8 +446,345 @@ triads n = [ (x,y,z) | x <- [1..n], y <- [1..n], z <- [1..n], x^2 + y ^2 == z^2]
 [(3,4,5),(4,3,5),(6,8,10),(8,6,10)]
 ```
 
+# c. Capacidades de pattern matching en Python
 
-# Tuplas:
+
+Antes de Python `3.10` no existía algo como los switch case en Python para hacer pattern matching. Se podía usar diccionarios para internar simular en algunos casos la correspondencia con algún patrón
+
+**Structural Pattern Matching en Python 3.10:**
+
+El structural pattern matching en Python puede ser usado como una simple declaración switch, pero es capaz de mucho más. 
+
+Tomemos el caso simple switch case. A continuación se muestra un fragmento de código que hace switch en un solo valor. Probándolo con los valores en un ciclo 1, 2, 3, 4.
+
+```Python
+for thing in [1,2,3,4]:
+    match thing:
+        case 1:
+            print("thing is 1")
+        case 2:
+            print("thing is 2")
+        case 3:
+            print("thing is 3")
+        case _:
+            print("thing is not 1, 2 or 3")
+```
+
+Lo primero que se nota es lo limpio de la sintaxis. Comienza por el keyword `match` seguido por el nombre de la variable. Entonces hay una lista de casos que comienzan con el keyword `case` y van seguidos del valor que coincide. Esto no es muy diferente a la declaración switch/case en otros lenguajes. 
+
+Si no match nadie entonces el caso default, designadao por `_` es ejecutado, pero a diferencia de C, por ejemplo , después que el código para un caso en particular es ejecutado , el control salta al final del match statement.
+
+Los switch statement son un caso simple de pattern matching pero Python 3.10 lleva esto un poco más lejos.
+
+Observemos el siguiente código:
+
+```Python
+for thing in [[1,2],[9,10],[1,2,3],[1],[0,0,0,0,0]]:
+    match thing:
+        case [x]:
+            print(f"single value: {x}")
+        case [x,y]:
+            print(f"two values: {x} and {y}")
+        case [x,y,z]:
+            print(f"three values: {x}, {y} and {z}")       
+        case _:
+            print("too many values")
+```
+
+Es una declaración `match` en un ciclo de nuevo pero esta vez la lista de valores por los que el ciclo itera son listas también. Las declaraciones `case` intentan matchear con esas listas. el primer `case` hace match con una lista de un solo elemento, el segundo con una lista de dos elementos , el tercero con una lista de tres elementos. El último caso es el default. Pero hace más que eso también vinculan los valores que han matcheado con los identificadores en los `case` statement. Por ejemplo  la primera lista es [1,2] y matchea con el segundo case [x,y]. Entonces en el código que se ejecuta los identificadores `x` y `y` toman los valores 1 y 2, respectivamente.
+
+Podemos también matcher patrones que incluyan valores por ejemplo:
+
+```Python
+for thing in [[1,2],[9,10],[3,4],[1,2,3],[1],[0,0,0,0,0]]:
+    match thing:
+        case [x]:
+            print(f"single value: {x}")
+        case [1,y]:
+            print(f"two values: 1 and {y}")
+        case [x,10]:
+            print(f"two values: {x} and 10")
+        case [x,y]:
+            print(f"two values: {x} and {y}")
+        case [x,y,z]:
+            print(f"three values: {x}, {y} and {z}")       
+        case _:
+            print("too many values")
+```
+
+
+Factorial usando structural pattern matching:
+
+```Python
+def factorial(n):
+    match n:
+        case 0 | 1:
+            return 1
+        case _:
+            return n * factorial(n - 1)
+```
+
+**Uso de Or patterns:**
+
+El símbolo `|` combina los patrones como alternativas . 
+Por ejemplo:
+
+```Python
+match command.split():
+    ... # Other cases
+    case ["north"] | ["go", "north"]:
+        current_room = current_room.neighbor("north")
+    case ["get", obj] | ["pick", "up", obj] | ["pick", obj, "up"]:
+        ... # Code for picking up the given object
+```
+Esto es llamado or pattern y producirá el resultado esperado. Los patrones se evaluan de izquierda a derecha. Esto puede ser relevante para saber que está vinculado si coincide más de una alternativa. 
+
+**Match sub-patrones:**
+
+```Python
+match command.split():
+    case ["go", ("north" | "south" | "east" | "west")]:
+        current_room = current_room.neighbor(...)
+        # how do I know which direction to go?
+```
+
+Este código es una simple rama y verifica que la palabra después de go es realmente una dirección. 
+Pero el código que mueve al player necesita saber cual fue elegido y no tiene forma de hacerlo. Lo que necesitamos es un pattern que se comporte como el or pattern pero al mismo tiempo haga una captura. Podemos hacer esto con el **as pattern**:
+
+```Python
+match command.split():
+    case ["go", ("north" | "south" | "east" | "west") as direction]:
+        current_room = current_room.neighbor(direction)
+```
+
+El **as pattern** matchea con cualquier patrón que esté en su lado izquierdo, pero también vincula el valor a un nombre.
+
+
+**Agregando condiciones a nuestros patrones:**
+
+Para agregar condiciones podemos usar las `guards`. 
+La sintaxis de las `guards` consiste en el keyword
+`if` seguido de cualquier expresión
+ 
+Ejemplo:
+
+```Python
+match command.split():
+    case ["go", direction] if direction in current_room.exits:
+        current_room = current_room.neighbor(direction)
+    case ["go", _]:
+        print("Sorry, you can't go that way")
+```
+
+La guard no es parte del patrón, es parte del case. Esta solo verifica si el patrón coincide. Si el patrón matchea y la condición es true, se ejecuta el body del case normalmente. Si el patrón coincide pero la condición es false el match statement procede a verificar el próximo case.
+
+
+
+**Comparación con Haskell:**
+
+En Haskell una función puede definirse mediantes un conjunto de ecuaciones utilizando el pattern matching, en la que se usa una secuencia de expresiones sintácticas llamadas patrones para seleccionar de entre una secuencia de resultados del mismo tipo.
+La definición de una función de esta forma es la siguiente:
+
+```
+f <patrón1> = <expresión1>
+f <patrón2> = <expresión2>
+...
+f <patrónk> = <expresiónk>
+
+```
+
+donde en cada ecuación se especifica un patrón determinado así como la expresión que
+debe ser evaluada si se verifica la presencia de dicho patrón en los argumentos de entrada
+de la función.
+
+Cuando se aplica una función definida de esta forma a sus argumentos de entrada, se
+realiza un proceso en el que se verifica si existe una correspondencia entre los
+argumentos pasados a la función y los patrones definidos en cada ecuación. De esta
+forma se determina cuál es la ecuación que se debe seleccionar y, por tanto, qué
+expresión evaluar.
+
+Esta comprobación se realiza en el orden en que fueron definidos los patrones: primero
+con patrón1, luego con patrón2 y así sucesivamente hasta que algún patrón
+coincida, en cuyo caso la expresión correspondiente es evaluada y devuelta.
+
+La correspondencia de patrones puede hacerse sobre variables y cualquier tipo de dato
+definido: números, caracteres, listas, tuplas, etc
+
+**Pattern matching sobre constantes numéricas y variables:**
+
+```Haskell
+factorial :: (Eq p, Num p) => p -> p
+factorial 0 = 1
+factorial n = n * factorial (n-1)
+```
+
+**Patrones sobre tipo Bool:**
+
+```Haskell
+miAnd:: Bool -> Bool -> Bool
+miAnd True True = True
+miAnd True False = False
+miAnd False True = False
+miAnd False False = False
+```
+
+Patrón anónimo:
+
+La definición anterior puede simplificarse,  combinando las últimas tres ecuaciones en una que retorna
+False independientemente de los valores que tengan los argumentos. Esto puede hacerse usando el
+patrón anónimo _ que se ajusta a cualquier valor:
+
+```Haskell
+miAnd True True = True
+miAnd _ _ = False
+
+```
+
+**Pattern matching sobre listas en Haskell:**
+
+Se define la función sumaLista, que devuelve la suma de los elementos de una lista. Se utiliza el
+patrón de lista (x:xs) para referirse a una lista que tiene al menos un elemento.
+
+
+```Haskell
+sumaLista :: Num a => [a] -> a
+sumaLista [] = 0
+sumaLista (x:xs) = x + sumaLista xs
+```
+
+```
+*Main> sumaLista [1,2,3,4,5]
+15
+```
+
+**Pattern matching sobre tuplas en Haskell:**
+
+La función sumaVectores, que toma dos vectores de 2 dimensiones como argumentos en forma de
+tuplas y devuelve el vector que resulta de sumar sus componentes separadamente, se puede definir de
+la siguiente forma:
+
+```Haskell
+sumaVectores :: (Num a, Num b) => (b,a) -> (b,a) -> (b,a)
+sumaVectores a b = (fst a + fst b, snd a + snd b)
+
+```
+
+Sin embargo, usando   pattern matching sobre tuplas, esta puede definirse de una forma
+más elegante:
+
+```
+sumaVectores (x1,y1) (x2,y2) = (x1 + x2, y1 + y2)
+
+```
+
+Patrones con nombre:
+
+Es posible dar nombre a todo un patrón poniendo un nombre y el símbolo @ delante de este, por
+ejemplo, `xs@(x:y:ys)`.
+
+Este patrón es equivalente a `(x:y:ys)`, pero permite acceder rápidamente a toda la lista a través de
+su nombre xs en lugar de repetir en el cuerpo de la función el patrón `(x:y:ys)`.
+
+```Haskell
+primerelemento :: Show a => [a] -> String
+primerelemento [] = "Lista vacía"
+primerelemento lista@(x:xs) = "El primer elemento de " ++ show lista ++" es " ++ show x
+
+```
+
+```
+*Main> primerelemento [1,2,3,4]
+"El primer elemento de [1,2,3,4] es 1"
+```
+
+# d. Inferencia de tipos en Python
+
+
+
+La inferencia de tipos es la deducción automática de los tipos de datos de expresiones específicas en un lenguaje de programación. Implica analizar un programa y luego inferir los diferentes tipos de algunas o todas las expresiones en ese programa para que el programador no necesite ingresar y definir explícitamente tipos de datos cada vez que se usan variables en el programa.
+
+Dadas las características de Python como lenguaje dinámico, tiene inferencia de tipos por defecto.
+
+Veamos algunos ejemplos:
+
+```Python
+a = 5
+b = 1.2
+cadena = "CPU"
+elems = [1,3,4]
+
+
+print(type(a))
+print(type(b))
+print(type(cadena))
+print(type(elems))
+```
+
+**Output:**
+
+```
+<class 'int'>
+<class 'float'>
+<class 'str'>
+<class 'list'>
+```
+
+```Python
+ for i in ['hello', 1, (1,2), [1,2,4,5,6]]:
+        print(type(i))
+```
+
+**Output:**
+
+```
+<class 'int'>
+<class 'float'>
+<class 'str'>
+<class 'list'>
+<class 'str'>
+<class 'int'>
+<class 'tuple'>
+<class 'list'>
+```
+
+**Comparación con Haskell:**
+
+Haskell trae inferencia de tipos por defecto, no hace falta usar ningún keyword para usarla.
+
+Veamos algunos ejemplos:
+
+Definamos la siguiente función simple que dado un número de entrada le suma 2 :
+
+ 
+```Haskell
+suma2 x =  x+2
+```
+
+Como vemos no definamos el tipo.
+
+Usando :t en el ghci intentemos obtener el tipo :
+
+```
+*Main> :t suma2
+suma2 :: Num a => a -> a
+```
+
+Veamos otro ejemplo:
+
+```Haskell
+cumplen2 p xs = length [x | x <- xs , p x ] == length xs
+```
+
+Usando :t en el ghci intentemos obtener el tipo :
+
+```
+*Main> :t cumplen2 
+cumplen2 :: (a -> Bool) -> [a] -> Bool
+```
+
+
+
+# e. Tuplas en Python:
 
 Las tuplas en Python son una colección de objetos separados por , . Las tuplas en Python o tuples son muy similares a las listas, pero con dos diferencias. Son inmutables, lo que significa que no pueden ser modificadas una vez declaradas, y en vez de inicializarse con corchetes se hace con (). 
 
@@ -721,7 +1061,8 @@ print(multOutput(5))
 (25, 10)
 ```
 
- # Redefinición de operadores:
+ # f. Redefinición de operadores en Python
+
 
 Sobrecargar el operador significa 
 **Operadores binarios:**
@@ -856,7 +1197,8 @@ Terna (-3,-3,-3)
 Terna (-3,-3,-3)
 ```
 
-# Inmutabilidad:
+# g. Inmutabilidad en Python:
+
 
 La mutabililidad es una propiedad diferenciadora de los tipos de datos en Python que hacen un gran contraste con los otros tipos de datos. Tiendo a ser la capacidad de los tipos de datos que permiten que se modifiquen después de su creación, a lo que se puede extraer un valor y también extraer de él.
 Por otro lado, también hay objetos que no siguen este principio y que son inalterables, sin permitir modificación después de su definición. Su estado no puede cambiar en absoluto tiende a representar un valor constante una vez inicializado. Por ejemplo, integer, string, float, Tuple, Frozen set.
@@ -973,336 +1315,5 @@ Como se puede observar changeLastName no modifica el objeto p1 Person sino que c
 Person {firstname = "David", lastname = "De Quesada"}
 ```
 
-# Pattern matching:
 
-Antes de Python `3.10` no existía algo como los switch case en Python para hacer pattern matching. Se podía usar diccionarios para internar simular en algunos casos la correspondencia con algún patrón
 
-**Structural Pattern Matching en Python 3.10:**
-
-El structural pattern matching en Python puede ser usado como una simple declaración switch, pero es capaz de mucho más. 
-
-Tomemos el caso simple switch case. A continuación se muestra un fragmento de código que hace switch en un solo valor. Probándolo con los valores en un ciclo 1, 2, 3, 4.
-
-```Python
-for thing in [1,2,3,4]:
-    match thing:
-        case 1:
-            print("thing is 1")
-        case 2:
-            print("thing is 2")
-        case 3:
-            print("thing is 3")
-        case _:
-            print("thing is not 1, 2 or 3")
-```
-
-Lo primero que se nota es lo limpio de la sintaxis. Comienza por el keyword `match` seguido por el nombre de la variable. Entonces hay una lista de casos que comienzan con el keyword `case` y van seguidos del valor que coincide. Esto no es muy diferente a la declaración switch/case en otros lenguajes. 
-
-Si no match nadie entonces el caso default, designadao por `_` es ejecutado, pero a diferencia de C, por ejemplo , después que el código para un caso en particular es ejecutado , el control salta al final del match statement.
-
-Los switch statement son un caso simple de pattern matching pero Python 3.10 lleva esto un poco más lejos.
-
-Observemos el siguiente código:
-
-```Python
-for thing in [[1,2],[9,10],[1,2,3],[1],[0,0,0,0,0]]:
-    match thing:
-        case [x]:
-            print(f"single value: {x}")
-        case [x,y]:
-            print(f"two values: {x} and {y}")
-        case [x,y,z]:
-            print(f"three values: {x}, {y} and {z}")       
-        case _:
-            print("too many values")
-```
-
-Es una declaración `match` en un ciclo de nuevo pero esta vez la lista de valores por los que el ciclo itera son listas también. Las declaraciones `case` intentan matchear con esas listas. el primer `case` hace match con una lista de un solo elemento, el segundo con una lista de dos elementos , el tercero con una lista de tres elementos. El último caso es el default. Pero hace más que eso también vinculan los valores que han matcheado con los identificadores en los `case` statement. Por ejemplo  la primera lista es [1,2] y matchea con el segundo case [x,y]. Entonces en el código que se ejecuta los identificadores `x` y `y` toman los valores 1 y 2, respectivamente.
-
-Podemos también matcher patrones que incluyan valores por ejemplo:
-
-```Python
-for thing in [[1,2],[9,10],[3,4],[1,2,3],[1],[0,0,0,0,0]]:
-    match thing:
-        case [x]:
-            print(f"single value: {x}")
-        case [1,y]:
-            print(f"two values: 1 and {y}")
-        case [x,10]:
-            print(f"two values: {x} and 10")
-        case [x,y]:
-            print(f"two values: {x} and {y}")
-        case [x,y,z]:
-            print(f"three values: {x}, {y} and {z}")       
-        case _:
-            print("too many values")
-```
-
-
-Factorial usando structural pattern matching:
-
-```Python
-def factorial(n):
-    match n:
-        case 0 | 1:
-            return 1
-        case _:
-            return n * factorial(n - 1)
-```
-
-**Uso de Or patterns:**
-
-El símbolo `|` combina los patrones como alternativas . 
-Por ejemplo:
-
-```Python
-match command.split():
-    ... # Other cases
-    case ["north"] | ["go", "north"]:
-        current_room = current_room.neighbor("north")
-    case ["get", obj] | ["pick", "up", obj] | ["pick", obj, "up"]:
-        ... # Code for picking up the given object
-```
-Esto es llamado or pattern y producirá el resultado esperado. Los patrones se evaluan de izquierda a derecha. Esto puede ser relevante para saber que está vinculado si coincide más de una alternativa. 
-
-**Match sub-patrones:**
-
-```Python
-match command.split():
-    case ["go", ("north" | "south" | "east" | "west")]:
-        current_room = current_room.neighbor(...)
-        # how do I know which direction to go?
-```
-
-Este código es una simple rama y verifica que la palabra después de go es realmente una dirección. 
-Pero el código que mueve al player necesita saber cual fue elegido y no tiene forma de hacerlo. Lo que necesitamos es un pattern que se comporte como el or pattern pero al mismo tiempo haga una captura. Podemos hacer esto con el **as pattern**:
-
-```Python
-match command.split():
-    case ["go", ("north" | "south" | "east" | "west") as direction]:
-        current_room = current_room.neighbor(direction)
-```
-
-El **as pattern** matchea con cualquier patrón que esté en su lado izquierdo, pero también vincula el valor a un nombre.
-
-
-**Agregando condiciones a nuestros patrones:**
-
-Para agregar condiciones podemos usar las `guards`. 
-La sintaxis de las `guards` consiste en el keyword
-`if` seguido de cualquier expresión
- 
-Ejemplo:
-
-```Python
-match command.split():
-    case ["go", direction] if direction in current_room.exits:
-        current_room = current_room.neighbor(direction)
-    case ["go", _]:
-        print("Sorry, you can't go that way")
-```
-
-La guard no es parte del patrón, es parte del case. Esta solo verifica si el patrón coincide. Si el patrón matchea y la condición es true, se ejecuta el body del case normalmente. Si el patrón coincide pero la condición es false el match statement procede a verificar el próximo case.
-
-
-
-**Comparación con Haskell:**
-
-En Haskell una función puede definirse mediantes un conjunto de ecuaciones utilizando el pattern matching, en la que se usa una secuencia de expresiones sintácticas llamadas patrones para seleccionar de entre una secuencia de resultados del mismo tipo.
-La definición de una función de esta forma es la siguiente:
-
-```
-f <patrón1> = <expresión1>
-f <patrón2> = <expresión2>
-...
-f <patrónk> = <expresiónk>
-
-```
-
-donde en cada ecuación se especifica un patrón determinado así como la expresión que
-debe ser evaluada si se verifica la presencia de dicho patrón en los argumentos de entrada
-de la función.
-
-Cuando se aplica una función definida de esta forma a sus argumentos de entrada, se
-realiza un proceso en el que se verifica si existe una correspondencia entre los
-argumentos pasados a la función y los patrones definidos en cada ecuación. De esta
-forma se determina cuál es la ecuación que se debe seleccionar y, por tanto, qué
-expresión evaluar.
-
-Esta comprobación se realiza en el orden en que fueron definidos los patrones: primero
-con patrón1, luego con patrón2 y así sucesivamente hasta que algún patrón
-coincida, en cuyo caso la expresión correspondiente es evaluada y devuelta.
-
-La correspondencia de patrones puede hacerse sobre variables y cualquier tipo de dato
-definido: números, caracteres, listas, tuplas, etc
-
-**Pattern matching sobre constantes numéricas y variables:**
-
-```Haskell
-factorial :: (Eq p, Num p) => p -> p
-factorial 0 = 1
-factorial n = n * factorial (n-1)
-```
-
-**Patrones sobre tipo Bool:**
-
-```Haskell
-miAnd:: Bool -> Bool -> Bool
-miAnd True True = True
-miAnd True False = False
-miAnd False True = False
-miAnd False False = False
-```
-
-Patrón anónimo:
-
-La definición anterior puede simplificarse,  combinando las últimas tres ecuaciones en una que retorna
-False independientemente de los valores que tengan los argumentos. Esto puede hacerse usando el
-patrón anónimo _ que se ajusta a cualquier valor:
-
-```Haskell
-miAnd True True = True
-miAnd _ _ = False
-
-```
-
-**Pattern matching sobre listas en Haskell:**
-
-Se define la función sumaLista, que devuelve la suma de los elementos de una lista. Se utiliza el
-patrón de lista (x:xs) para referirse a una lista que tiene al menos un elemento.
-
-
-```Haskell
-sumaLista :: Num a => [a] -> a
-sumaLista [] = 0
-sumaLista (x:xs) = x + sumaLista xs
-```
-
-```
-*Main> sumaLista [1,2,3,4,5]
-15
-```
-
-**Pattern matching sobre tuplas en Haskell:**
-
-La función sumaVectores, que toma dos vectores de 2 dimensiones como argumentos en forma de
-tuplas y devuelve el vector que resulta de sumar sus componentes separadamente, se puede definir de
-la siguiente forma:
-
-```Haskell
-sumaVectores :: (Num a, Num b) => (b,a) -> (b,a) -> (b,a)
-sumaVectores a b = (fst a + fst b, snd a + snd b)
-
-```
-
-Sin embargo, usando   pattern matching sobre tuplas, esta puede definirse de una forma
-más elegante:
-
-```
-sumaVectores (x1,y1) (x2,y2) = (x1 + x2, y1 + y2)
-
-```
-
-Patrones con nombre:
-
-Es posible dar nombre a todo un patrón poniendo un nombre y el símbolo @ delante de este, por
-ejemplo, `xs@(x:y:ys)`.
-
-Este patrón es equivalente a `(x:y:ys)`, pero permite acceder rápidamente a toda la lista a través de
-su nombre xs en lugar de repetir en el cuerpo de la función el patrón `(x:y:ys)`.
-
-```Haskell
-primerelemento :: Show a => [a] -> String
-primerelemento [] = "Lista vacía"
-primerelemento lista@(x:xs) = "El primer elemento de " ++ show lista ++" es " ++ show x
-
-```
-
-```
-*Main> primerelemento [1,2,3,4]
-"El primer elemento de [1,2,3,4] es 1"
-```
-
-# Inferencia de tipos
-
-
-La inferencia de tipos es la deducción automática de los tipos de datos de expresiones específicas en un lenguaje de programación. Implica analizar un programa y luego inferir los diferentes tipos de algunas o todas las expresiones en ese programa para que el programador no necesite ingresar y definir explícitamente tipos de datos cada vez que se usan variables en el programa.
-
-Dadas las características de Python como lenguaje dinámico, tiene inferencia de tipos por defecto.
-
-Veamos algunos ejemplos:
-
-```Python
-a = 5
-b = 1.2
-cadena = "CPU"
-elems = [1,3,4]
-
-
-print(type(a))
-print(type(b))
-print(type(cadena))
-print(type(elems))
-```
-
-**Output:**
-
-```
-<class 'int'>
-<class 'float'>
-<class 'str'>
-<class 'list'>
-```
-
-```Python
- for i in ['hello', 1, (1,2), [1,2,4,5,6]]:
-        print(type(i))
-```
-
-**Output:**
-
-```
-<class 'int'>
-<class 'float'>
-<class 'str'>
-<class 'list'>
-<class 'str'>
-<class 'int'>
-<class 'tuple'>
-<class 'list'>
-```
-
-**Comparación con Haskell:**
-
-Haskell trae inferencia de tipos por defecto, no hace falta usar ningún keyword para usarla.
-
-Veamos algunos ejemplos:
-
-Definamos la siguiente función simple que dado un número de entrada le suma 2 :
-
- 
-```Haskell
-suma2 x =  x+2
-```
-
-Como vemos no definamos el tipo.
-
-Usando :t en el ghci intentemos obtener el tipo :
-
-```
-*Main> :t suma2
-suma2 :: Num a => a -> a
-```
-
-Veamos otro ejemplo:
-
-```Haskell
-cumplen2 p xs = length [x | x <- xs , p x ] == length xs
-```
-
-Usando :t en el ghci intentemos obtener el tipo :
-
-```
-*Main> :t cumplen2 
-cumplen2 :: (a -> Bool) -> [a] -> Bool
-```
