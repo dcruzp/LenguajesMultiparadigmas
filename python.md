@@ -1101,6 +1101,7 @@ match command.split():
 La guard no es parte del patrón, es parte del case. Esta solo verifica si el patrón coincide. Si el patrón matchea y la condición es true, se ejecuta el body del case normalmente. Si el patrón coincide pero la condición es false el match statement procede a verificar el próximo case.
 
 
+
 **Comparación con Haskell:**
 
 En Haskell una función puede definirse mediantes un conjunto de ecuaciones utilizando el pattern matching, en la que se usa una secuencia de expresiones sintácticas llamadas patrones para seleccionar de entre una secuencia de resultados del mismo tipo.
@@ -1217,4 +1218,77 @@ primerelemento lista@(x:xs) = "El primer elemento de " ++ show lista ++" es " ++
 *Main> primerelemento [1,2,3,4]
 "El primer elemento de [1,2,3,4] es 1"
 ```
+
+# Inferencia de tipos
+
+
+La inferencia de tipos es la deducción automática de los tipos de datos de expresiones específicas en un lenguaje de programación. Implica analizar un programa y luego inferir los diferentes tipos de algunas o todas las expresiones en ese programa para que el programador no necesite ingresar y definir explícitamente tipos de datos cada vez que se usan variables en el programa.
+
+Dadas las características de Python como lenguaje dinámico, tiene inferencia de tipos por defecto.
+
+Veamos algunos ejemplos:
+
+```Python
+a = 5
+b = 1.2
+cadena = "CPU"
+elems = [1,3,4]
+
+
+print(type(a))
+print(type(b))
+print(type(cadena))
+print(type(elems))
+```
+
+**Output:**
+
+```
+<class 'int'>
+<class 'float'>
+<class 'str'>
+<class 'list'>
+```
+
+```Python
+ for i in ['hello', 1, (1,2), [1,2,4,5,6]]:
+        print(type(i))
+```
+
+**Output:**
+
+```
+<class 'int'>
+<class 'float'>
+<class 'str'>
+<class 'list'>
+<class 'str'>
+<class 'int'>
+<class 'tuple'>
+<class 'list'>
+```
+
+**Comparación con Haskell:**
+
+Haskell trae inferencia de tipos por defecto, no hace falta usar ningún keyword para usarla.
+
+Veamos algunos ejemplos:
+
+Definamos la siguiente función simple que dado un número de entrada le suma 2 :
+
+ 
+```Haskell
+suma2 x =  x+2
+```
+
+Como vemos no definamos el tipo.
+
+Usando :t en el ghci intentemos obtener el tipo :
+
+```
+*Main> :t suma2
+suma2 :: Num a => a -> a
+```
+
+
 
