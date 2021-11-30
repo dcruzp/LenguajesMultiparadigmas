@@ -1,4 +1,4 @@
-# Python <img src="./images/python1.jpeg" style="zoom:20%;" />
+#  <img src="./images/python1.jpeg" style="zoom:20%;" />
 
 
 
