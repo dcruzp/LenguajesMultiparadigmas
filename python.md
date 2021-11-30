@@ -1,4 +1,8 @@
-### Python
+# Python <img src="./images/python1.jpeg" style="zoom:20%;" />
+
+
+
+
 
 El concepto funciones como ciudadanos de primera clase manda que las funciones son tratados como ciudadanos de primera clase: almacenadas en variables o es una estructura de datos, pasadas o devueltas como variables por una función.
 Se dice que en un lenguaje las funciones son de primera clase (o que son "objetos de primera clase") cuando se pueden tratar como cualquier otro valor del lenguaje, es decir, cuando se pueden almacenar en variables, pasar como parámetro y devolver desde funciones, sin ningún tratamiento especial. 
@@ -1290,5 +1294,15 @@ Usando :t en el ghci intentemos obtener el tipo :
 suma2 :: Num a => a -> a
 ```
 
+Veamos otro ejemplo:
 
+```Haskell
+cumplen2 p xs = length [x | x <- xs , p x ] == length xs
+```
 
+Usando :t en el ghci intentemos obtener el tipo :
+
+```
+*Main> :t cumplen2 
+cumplen2 :: (a -> Bool) -> [a] -> Bool
+```
