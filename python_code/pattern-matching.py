@@ -1,5 +1,9 @@
-from typing import Match
+pattern = {"full": 10, "empty": 0, "medium": 5 }
 
 
-command = "Hello darkness to my friend"
+def unpack(full, **_):
+    return full 
+
+
+print(unpack(**pattern))
 
