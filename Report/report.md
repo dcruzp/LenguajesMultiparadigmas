@@ -258,7 +258,7 @@ Tambien existe `List<T>.ConvertAll` que se comporta igual que las *list Comprehe
 ```c#
 var foo = new List<int> {1,2,3}; 
 var bar = foo.ConvertAll (x => x * 2);  //list comprehension 
-Console.WriteLine(string.Join(" ", bar)) // should print 2,4,6
+Console.WriteLine(string.Join(" ", bar)); // should print 2,4,6
 ```
 
 Para C# 2.0, tu puedes usar un método anónimo con el `delegate`  `Convert`  para hacer algo parecido. 
