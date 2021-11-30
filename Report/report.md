@@ -4,11 +4,11 @@
 
 ### Funciones como ciudadanos de primera clase 
 
-Cuando se habla del termino cuidadano de primera clase, se refiera a que es un valor que puede ser asignado a variables, pasado como paramentro o devuelto como resultado de una funcion. C# tambien tiene `delegates` que basicamente son tipos a los que se los que se les puede asignar cualquier tipo metodo que coincida con su declaracion (parametros, tipos de datos y valor de retorno) 
+Cuando se habla del termino ciudadano de primera clase, se refiere a que es un valor que puede ser asignado a variables, pasado como parámetro o devuelto como resultado de una función. C# también tiene `delegates` que básicamente son tipos a los que se les puede asignar cualquier tipo de método que coincida con su declaración (parámetros, tipos de datos y valor de retorno) 
 
 ```c#
 Func<int,int> square = (x) => {return x * x };
-Func<A,C> Compose<A<B<C>(Func<A,B> f , Func<B,C> g)
+Func<A,C> Compose<A,B,C>(Func<A,B> f , Func<B,C> g)
 {
     return x => g(f(x)); 
 }
@@ -18,14 +18,13 @@ Func<string,int> f1 = (str) =>{
 Func<int,bool> f2 = (x) => {
     return x == 1; 
 };
-Func fComposed = Compose(f1,f2);
-
-fComposed("second") // false 
+var fComposed = Compose(f1,f2);
+Console.WriteLine(fCompose("secund")); //false
 ```
 
-En el ejemplo anterior la funcion `Compose` toma como parametro dos funciones que toman un parametro y regresan un valor. Regresa una funcion que toma un parametro del tipo que recibe el primer parametro y regres un valor del tipo del valor de retorno del segundo parametro. 
+En el ejemplo anterior la función `Compose` toma como parámetro dos funciones que toman un parámetro y regresan un valor. Regresa una función que toma un parámetro del tipo que recibe el primer parámetro y regresa un valor del tipo del valor de retorno del segundo parámetro. 
 
-Usando delegates tambien se tiene un comportamiento con la misma funcionalidad que vimos anteriormente. 
+Usando delegates también se tiene un comportamiento con la misma funcionalidad que vimos anteriormente. 
 
 ```c#
 public delegate void Del (string message);
@@ -176,17 +175,17 @@ string WaterState2(int tempInFahrenheit) =>
 };
 ```
 
-La importancia de que el compilador valida si a todas las posibles entradas son procesadas radica en posibles Excepciones del programa, refractorizacion y reordenamiento del codigo. 
+La importancia de que el compilador valida si a todas las posibles entradas son procesadas radica en posibles Excepciones del programa, refractorizacion y reordenamiento del código. 
 
 ##### Multiple inputs 
 
-Se pueden escribir partrones que examinan multiples  propiedades de un objeto. Considera el siguiente *Order* `record` 
+Se pueden escribir patrones que examinan múltiples  propiedades de un objeto. Considera el siguiente *Order* `record` 
 
 ```c#
 public record Order (int Item, decimal Cost); 
 ```
 
-El siguiente codigo examina el numero de articulos y el valor de pedido para calcular un precio con descuento: 
+El siguiente código examina el numero de artículos y el valor de pedido para calcular un precio con descuento: 
 
 ```c#
 public decimal CalculateDiscount(Order order) =>
@@ -200,7 +199,7 @@ public decimal CalculateDiscount(Order order) =>
     };
 ```
 
-Los primeros dos casos examinan dos propiedades del Order. La tercera examina solo el costo, la siguiente chequean el `null` y el final machea cualquier otra valor. Si el tipo Order define un metodo apropiado `Decontruct` tu puedes omitir la propiedad llamada del patron y usar la deconstruccion para examinar las propiedades: 
+Los primeros dos casos examinan dos propiedades del Order. La tercera examina solo el costo, la siguiente chequean el `null` y el final machea cualquier otra valor. Si el tipo Order define un método apropiado `Decontruct` tu puedes omitir la propiedad llamada del patrón y usar la deconstruccion para examinar las propiedades: 
 
 ```c#
 public decimal CalculateDiscount(Order order) =>
@@ -220,9 +219,9 @@ El codigo anterior muestra la *positional pattern* donde las propiedades son dec
 
 ### List comprehension en C# 
 
-Una List Comprehension en C# es un tipo de notacion en el que el programador puede describir las propiedades que los miembros de un conjunto debe reunir. Is usualmente usado para crear un conjunto basado en otro ya existente aplicando algun tipo de combinacion. 
+Una List Comprehension en C# es un tipo de notación en el que el programador puede describir las propiedades que los miembros de un conjunto debe reunir. Son usualmente usado para crear un conjunto basado en otro ya existente aplicando algún tipo de combinación. 
 
-Con la aparición de C# 3.0 y de .Net Framework 3.5, aparecio la notacion *List Comprehension* basada en `Linkq` . El siguiente ejemplo muestra como formar un conjunto de números pares en el rango del 0 al 10.
+Con la aparición de C# 3.0 y de .Net Framework 3.5, apareció la notación *List Comprehension* basada en `Linkq` . El siguiente ejemplo muestra como formar un conjunto de números pares en el rango del 0 al 10.
 
 ```c#
 IEnumerable<int> numbers = Enumerable.Range(0, 10);
@@ -231,7 +230,7 @@ var evens = from num in numbers where num % 2 == 0 select num;
 
 Esto nos va a dar a retornar un objeto `evens` que es una lista que contiene a todos los números pares del 0 al 10  , `0 2 4 6 8 ` 
 
-Las *querys expression* en C# 3 en adelante son azúcar sintáctica sobre la nomenclatura del código de C# normal. Aunque las expresiones de consultas generalmente terminan llamando a métodos de extencion (No tienen que hacerlo y al compilador no le importa, pero generalmente si). Hay varias cosas que se pueden hacer con las colecciones que no estan disponibles en las expresiones de consulta de C#, pero son compatibles con las llamadas a métodos, por lo que vale la pena conocer ambos tipos de sintaxis.
+Las *querys expression* en C# 3 en adelante son azúcar sintáctica sobre la nomenclatura del código de C# normal. Aunque las expresiones de consultas generalmente terminan llamando a métodos de extencion (No tienen que hacerlo y al compilador no le importa, pero generalmente si). Hay varias cosas que se pueden hacer con las colecciones que no están disponibles en las expresiones de consulta de C#, pero son compatibles con las llamadas a métodos, por lo que vale la pena conocer ambos tipos de sintaxis.
 
 ```c#
 List<Foo> fooList = new List<Foo>();
@@ -254,7 +253,7 @@ IEnumerable<string> extract = fooList.Where((foo, index) => foo.Bar > 10 + index
                                      .Select(foo => foo.Name.ToUpper());
 ```
 
-Tambien existe `List<T>.ConvertAll` que se comporta igual que las *list Comprehension* realizando la misma operacion en cada elemento de una lista existente y luego devolviendo una nueva coleccion. Esta es una alternativa al uso de `Linq`, especialmente si se esta usando .NET 2.0 . En el ejemplo siguiente se muestra como usar esta con C# 3.0 pasando una funcion lambda especificando la funcion de mapeo que se necesita.  
+Tambien existe `List<T>.ConvertAll` que se comporta igual que las *list Comprehension* realizando la misma operacion en cada elemento de una lista existente y luego devolviendo una nueva coleccion. Esta es una alternativa al uso de `Linq`, especialmente si se esta usando .NET 2.0 . En el ejemplo siguiente se muestra como usar esta con C# 3.0 pasando una función lambda especificando la función de mapeo que se necesita.  
 
 ```c#
 var foo = new List<int> {1,2,3}; 
@@ -262,7 +261,7 @@ var bar = foo.ConvertAll (x => x * 2);  //list comprehension
 Console.WriteLine(string.Join(" ", bar)) // should print 2,4,6
 ```
 
-Para C# 2.0, tu puedes usar un metodo anonimo con el `delegate`  `Convert`  para hacer algo parecido. 
+Para C# 2.0, tu puedes usar un método anónimo con el `delegate`  `Convert`  para hacer algo parecido. 
 
 ```c#
 List<int> foo = new List<int> (new int[]{1,2,3}); 
@@ -274,35 +273,35 @@ Console.WriteLine(string.Join(" ", bar));
 
 ### Inferencia de Tipos en C# 
 
-La inferencia de tipos es un proceso por el cual el compilador determina el tipo de una variable local que ha sido declarada sin una declaracion explicita de su tipo. El tipo es inferido a partir del valor inicial provisto a la variable. Para que el algoritmo de inferencia de tipos funciones es necesaria una entrada, que es el contenido de la variable. Si no inicializamos la variable a inferir tendremos un error de compilacion. La inferencia de tipos en C# se puede implementar haciendo uso de la palabra reservada `var` . la sintaxis para declarar una variable haciendo uso de la inferencia de tipos seria asi: 
+La inferencia de tipos es un proceso por el cual el compilador determina el tipo de una variable local que ha sido declarada sin una declaración explicita de su tipo. El tipo es inferido a partir del valor inicial provisto a la variable. Para que el algoritmo de inferencia de tipos funciones es necesaria una entrada, que es el contenido de la variable. Si no inicializamos la variable a inferir tendremos un error de compilación. La inferencia de tipos en C# se puede implementar haciendo uso de la palabra reservada `var` . la sintaxis para declarar una variable haciendo uso de la inferencia de tipos seria así: 
 
 ```c#
 var x = new ArrayList(); 
 ```
 
-en este caso el compilador determino que la variable `x` es del tipo `ArrayList` , pese a que en ningun momento se ha declarado su tipo explicitamente. 
+en este caso el compilador determino que la variable `x` es del tipo `ArrayList` , pese a que en ningún momento se ha declarado su tipo explícitamente. 
 
-La inferencia de tipos por valor generaliza al tipo mas implicito y optimzado del .Net Framework. Como el framework optimiza la performance para tipos enteros de 32-bits (System.Int32 y System.UInt32) un valor de 0,10 o de 100 que perfectamente podrian inferirse como `System.Byte` se infiere como system.Int32. Incluso se recomienda usar los tipos enteros para contradores (aunque contemos del 0 al 10) y variables enteras de acceso frecuente, ya que la performance en tiempo de ejecucion del tipo entero es preferible al storage en RAM que ahorramos si declaramos varaibles como `System.SByte`, `System.Byte` y `System.Int16`. De la misma manera, con valores de punto flotante si declaramos una variable con un valor de 3.14 sera inferida al tipo `System.Double` y no como System.Single(float) que perfectamente se la puede contener. La razon es que las operaciones con System.Double son optimizadas por hardware. Solo se infiere a un tipo no optimizado por el Framework(como System.Int64 o System.Decimal)  si el valor de la variable esta fuera del rango de los tipos optimizados. Si por ejemplo queremos que se infiera el valor 3.14 como float en vez de double, debemos proporcionar cierta evidencia que ayude al compilador a inferirlo como float. 
+La inferencia de tipos por valor generaliza al tipo mas implícito y optimizado del .Net Framework. Como el framework optimiza la performance para tipos enteros de 32-bits (System.Int32 y System.UInt32) un valor de 0,10 o de 100 que perfectamente podrían inferirse como `System.Byte` se infiere como system.Int32. Incluso se recomienda usar los tipos enteros para controladores (aunque contemos del 0 al 10) y variables enteras de acceso frecuente, ya que la performance en tiempo de ejecución del tipo entero es preferible al storage en RAM que ahorramos si declaramos variables como `System.SByte`, `System.Byte` y `System.Int16`. De la misma manera, con valores de punto flotante si declaramos una variable con un valor de 3.14 sera inferida al tipo `System.Double` y no como System.Single(float) que perfectamente se la puede contener. La razón es que las operaciones con System.Double son optimizadas por hardware. Solo se infiere a un tipo no optimizado por el Framework(como System.Int64 o System.Decimal)  si el valor de la variable esta fuera del rango de los tipos optimizados. Si por ejemplo queremos que se infiera el valor 3.14 como float en vez de double, debemos proporcionar cierta evidencia que ayude al compilador a inferirlo como float. 
 
 ``` c#
 var inferredType = (float)3.14  // casting explicito 
 var inferredType = 3.14f        // notacion sufijo 
 ```
 
-Entonces resumiendo la inferencia de tipos no se resuelve utilizando mecanismo de codigo dinamico, que afecten la performance en tiempo de ejecucion. La inferencia de tipos se resuelve en tiempo de compilacion, por lo tanto existe un costo en tiempo de compilacion, ese tiempo es el tiempo que terad el algoritmo de inferencia en sintetizar una expresion y resolver el tipo de una variable.  La inferencia de tipos tanto de valor como de referencia es para variable locales de metodos. No se aplica para variables de clases, propiedades, parametros ni valores de retorno. La inferencia de tipos no es mas que azucar sintacica, una manera comoda y agil de delcarar variables locales.
+Entonces resumiendo la inferencia de tipos no se resuelve utilizando mecanismo de código dinámico, que afecten la performance en tiempo de ejecución. La inferencia de tipos se resuelve en tiempo de compilación, por lo tanto existe un costo en tiempo de compilación, ese tiempo es el tiempo que tarda el algoritmo de inferencia en sintetizar una expresión y resolver el tipo de una variable.  La inferencia de tipos tanto de valor como de referencia es para variable locales de métodos. No se aplica para variables de clases, propiedades, parámetros ni valores de retorno. La inferencia de tipos no es mas que azúcar sintáctica, una manera cómoda y ágil de declarar variables locales.
 
 
 
 ### Tuplas en C# 
 
-Las tuplas se crea utilizando los tipos genericos `Tuple<T1>`  - `Tuple<T1,T2,T3,T4,T5,T6,T7,T8>`. Cada uno de los tipos representa una tupla que contiene de 1 a 8 elementos. Los tipos pueden ser de diferente tipos.
+Las tuplas se crea utilizando los tipos genéricos `Tuple<T1>`  - `Tuple<T1,T2,T3,T4,T5,T6,T7,T8>`. Cada uno de los tipos representa una tupla que contiene de 1 a 8 elementos. Los tipos pueden ser de diferente tipos.
 
 ```c#
 //tuple with 4 element
 var tuple = new Tuple<string, int, bool, MyClass>("foo", 123, true, new MyClass());
 ```
 
-Las tuplas tambien se pueden crear usando metodos estaticos de `Tuple.Create` .En este caso los tipos de los elementos son inferidos por el compilador de C#. 
+Las tuplas también se pueden crear usando métodos estáticos de `Tuple.Create` .En este caso los tipos de los elementos son inferidos por el compilador de C#. 
 
 ```c#
 // tuple with 4 elements
@@ -325,7 +324,7 @@ var item3 = tuple.Item3; // true
 var item4 = tuple.Item4; // new My Class()
 ```
 
-Las tuplas se pueden comparar en funcion de sus elementos. Como ejemplo, un enumerable cuyos elementos son del tiplo `Tuple` puede ordenarse en funcion de los operadores de comparacion definidos en un elemeto especifico: 
+Las tuplas se pueden comparar en función de sus elementos. Como ejemplo, un enumerable cuyos elementos son del tipo `Tuple` puede ordenarse en función de los operadores de comparación definidos en un elemento especifico: 
 
 ```c#
 List<Tuple<int, string>> list = new List<Tuple<int, string>>();
@@ -345,7 +344,7 @@ foreach (var element in list) {
 // (3, qux)
 ```
 
-Las tuplas se pueden usar para devolver multiples valores de un metodo sin usar parametros. En el siguiente ejemplo, *AddMultiply* se usa para devolver dos valores(suma, producto). 
+Las tuplas se pueden usar para devolver múltiples valores de un método sin usar parámetros. En el siguiente ejemplo, *AddMultiply* se usa para devolver dos valores(suma, producto). 
 
 ```c#
 void Write()
@@ -364,7 +363,7 @@ Tuple<int, int> AddMultiply(int a, int b)
 // 700
 ```
 
- Uno de los casos mas comunes de los usos de casos de las tuplas es como tipo de retorno de metodo. Es decir en lugar de definir los parametros del metodo, puede agrupar los resultados del metodo en un tipo de retorno de tupla, como muestra el siguiente ejemplo: 
+ Uno de los casos mas comunes de los usos de casos de las tuplas es como tipo de retorno de método. Es decir en lugar de definir los parámetros del método, puede agrupar los resultados del método en un tipo de retorno de tupla, como muestra el siguiente ejemplo: 
 
 ```c#
 var xs = new [] {4,7,9};
@@ -387,7 +386,7 @@ Console.WriteLine($"Limits of [{string.Join(" ", ys)}] are {minimum} and {maximu
 
 En el ejemplo anterior se puede ver como se puede trabajar con la tupla retornada directamente o desonstruyentdo esta en variables separadas. 
 
-Se puede especificar explicitamente el nombre de cada uno de los campos de la inicializacion de la tupla o la definicion de el tipo de tupla, como se muestra en el siguiente ejemplo: 
+Se puede especificar explicitamente el nombre de cada uno de los campos de la inicialización de la tupla o la definición de el tipo de tupla, como se muestra en el siguiente ejemplo: 
 
 ```c#
 var t = (Sum: 4.5, Count: 3);
@@ -397,7 +396,7 @@ Console.WriteLine($"Sum of {t.Count} elements is {t.Sum}.");
 Console.WriteLine($"Sum of {d.Count} elements is {d.Sum}.");
 ```
 
-Con C# 7.1 si no se especifica el nombre de los campo, estos se van a inferir del nombre de la variable correspondiente en la expresion de inicializacion de la tupla. como se muestra en la tupla siguiente: 
+Con C# 7.1 si no se especifica el nombre de los campo, estos se van a inferir del nombre de la variable correspondiente en la expresión de inicialización de la tupla. como se muestra en la tupla siguiente: 
 
 ```c#
 var sum = 4.5;
@@ -406,14 +405,14 @@ var t = (sum, count);
 Console.WriteLine($"Sum of {t.count} elements is {t.sum}.");
 ```
 
-Eso se conoce como iniciadores de proyeccion de tuplas. El nombre de una variables no se proyecta en un nombre de campo de tuplas en los siguientes casos: 
+Eso se conoce como iniciadores de proyección de tuplas. El nombre de una variables no se proyecta en un nombre de campo de tuplas en los siguientes casos: 
 
  - el nombre del candidato es un nombre del miembro de un tipo de tupla, por ejemplo `Item3`, `ToString` o `Rest` 
  - el nombre del candidato es un duplicado de otro nombre de campo de tupla, ya sea explicito o implicito
 
 En esos casos, especifica explicitamente el nombre de un campo o acceder a un campo por su nombre predeterminado. 
 
-El nombre por defecto de los campos de las tuplas son `Item1`, `Item2`, `Item3` y asi sucesivamente. Siempre se puede usar el nombre por defecto de un campo. Incluso cuando el nombre de un campo se especifica explicitamente o se infiere, como lo muestra el siguiete ejemplo: 
+El nombre por defecto de los campos de las tuplas son `Item1`, `Item2`, `Item3` y así sucesivamente. Siempre se puede usar el nombre por defecto de un campo. Incluso cuando el nombre de un campo se especifica explícitamente o se infiere, como lo muestra el siguiente ejemplo: 
 
 ```c#
 var a = 1;
@@ -427,12 +426,12 @@ Console.WriteLine($"The 3rd element is {t.Item3}.");
 // The 3rd element is 3.
 ```
 
-La asignacion de tuplas y las comparaciones de igualdad de tuplas no tienen en cuenta los nombre de campos. en tiempo de compilacion, el compilador remplaza los nombres de los campos que no son por defecto con los correspondientes nombres por defecto. Como resultado, los nombres de los campos explicitamente especificados o inferidos no estan disponibles en tiempo de ejecucion. 
+La asignación de tuplas y las comparaciones de igualdad de tuplas no tienen en cuenta los nombre de campos. En tiempo de compilación, el compilador remplaza los nombres de los campos que no son por defecto con los correspondientes nombres por defecto. Como resultado, los nombres de los campos explícitamente especificados o inferidos no están disponibles en tiempo de ejecución. 
 
-C# soporta la asignacion entre tipos de tuplas que satisfacen las dos condiciones siguientes: 
+C# soporta la asignación entre tipos de tuplas que satisfacen las dos condiciones siguientes: 
 
  - ambos tipos de tuplas tienen el mismo numero de elementos
- - por cada posicion en la tupla, el tipo de la tupla de la derecha es el mismo o se puede convertir implicitamente al tipo que le corresponde al elemento de lado izquierdo
+ - por cada posición en la tupla, el tipo de la tupla de la derecha es el mismo o se puede convertir implícitamente al tipo que le corresponde al elemento de lado izquierdo
 
 Los valores de los elementos de la tupla son asignados siguiendo el orden de los elementos de la tupla. El nombre de los campos de las tuplas son ignorados y no asignados, como se muestra en el siguiente ejemplo: 
 
@@ -451,7 +450,7 @@ Console.WriteLine($"{nameof(t3)}: {t3.A} and {t3.B}");
 // t3: 17 and 3.14
 ```
 
-Se puede usar el operador de asignacion `=` para *deconstruir* la instancia de una tupla en variables separadas. Se puede hacer de una de las siguientes maneras.
+Se puede usar el operador de asignación `=` para *deconstruir* la instancia de una tupla en variables separadas. Se puede hacer de una de las siguientes maneras.
 
  - Declarando explicitamente el tipo de cada variable dentro de parentesis: 
 
@@ -507,7 +506,7 @@ Dos tuplas son comparables cuando cuando cumplen las dos condiciones siguientes:
  - Ambas tuplas tienen el numero de elementos. 
  - Por cada posiciones de la tupla, los elementos correspondientes de la parte izquierda y de la parte derecha de operador son comparables con los operadores `==` y `!=` 
 
-Tipicamente, se factoriza un metodo que tiene parametros `out` dentro de un metodo que retorna una tupla. Sin embargo hay casos en que un parametro `out`  puede ser de un tipo tupla. Los ejemplos siguientes muestran como trabajar con tuplas como parametros`out`.
+Típicamente, se factoriza un método que tiene parámetros `out` dentro de un método que retorna una tupla. Sin embargo hay casos en que un parámetro `out`  puede ser de un tipo tupla. Los ejemplos siguientes muestran como trabajar con tuplas como parametros`out`.
 
 ```c#
 var limitsLookup = new Dictionary<int, (int Min, int Max)>()
@@ -529,14 +528,14 @@ if (limitsLookup.TryGetValue(4, out (int Min, int Max) limits))
 
 ### Redefinicion de operadores en C# 
 
-Un tipo definido por el programador puede sobrecargar un operador de C# predefinido. Un tipo puede proporcionar la implementacion personalizada de una operacion cuando uno o los dos operandos son de ese tipo. 
+Un tipo definido por el programador puede sobrecargar un operador de C# predefinido. Un tipo puede proporcionar la implementacion personalizada de una operación cuando uno o los dos operandos son de ese tipo. 
 
-Para sobrecargar un operador se usa la palabla clave `operator` . Una declaracion de operador debe cumplir con la siguiente reglas: 
+Para sobrecargar un operador se usa la palabla clave `operator` . Una declaración de operador debe cumplir con la siguiente reglas: 
 
  - Incluir los modificadores`public` y  `static`  
- - Un operador unitario tiene un parametro de entrada. Un operador binario tiene dos parametros de entrada. En cada caso, al menos un parametro debe ser de tipo `T` o `T?` donde `T` es el tipo que contiene la declaracion del operador.
+ - Un operador unitario tiene un parámetro de entrada. Un operador binario tiene dos parametros de entrada. En cada caso, al menos un parámetro debe ser de tipo `T` o `T?` donde `T` es el tipo que contiene la declaración del operador.
 
-En el ejemplo siguiente se muestra una estructura simplificada para representar un numero racional. La estructura sobrecarga alguno de los operadores aritmetico: 
+En el ejemplo siguiente se muestra una estructura simplificada para representar un numero racional. La estructura sobrecarga alguno de los operadores aritmético: 
 
 ```c#
 using System;
@@ -604,17 +603,17 @@ La tabla siguiente muestra las posibilidades de sobrecarga de los operadores en 
 | Operadores                                                   | Posibilida de sobrecarga                                     |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | `+x`, `-x`, `!x`, `~x`, `++`, `--`, `true`, `false`          | Estos operadores unarios se pueden sobrecargar               |
-| `x + y`, `x-y`, `x * y`, `x / y`, `x % y`, `x & y`, `x ^ y`, `x << y`, `x >> y`, `x == y`, `x != y`, `x < y`, `x > y`, `x <= y`, `x >= y`, `x|y` | No se pueden sobrecargar los operadores logicos condicionales, si un tipo con los operadores `true` o `false` sobrecargados, tambien sobrecarga al operador `&` o `|` de determinada manera, el operador `&&` o `||`, respectivamente, se puede evaluar para los operadores de este tipo. |
+| `x + y`, `x-y`, `x * y`, `x / y`, `x % y`, `x & y`, `x ^ y`, `x << y`, `x >> y`, `x == y`, `x != y`, `x < y`, `x > y`, `x <= y`, `x >= y`, `x|y` | No se pueden sobrecargar los operadores lógicos condicionales, si un tipo con los operadores `true` o `false` sobrecargados, también sobrecarga al operador `&` o `|` de determinada manera, el operador `&&` o `||`, respectivamente, se puede evaluar para los operadores de este tipo. |
 | `a[i]` , `a?[i]`                                             | El acceso a un elemento no se considera un operador sobrecargable, pero puede definir un indexador. |
-| `(T)x`                                                       | No se puede convertir el operador de conversion, pero puede definirse conversiones de tipos personalizadas que pueden realizarse mediante una expresion de conversion |
-| `+=`, `-=`, `*=`, `/=`, `%=`, `&=` ,`^=`, `<<=`, `>>=` , `|=` | Los operadores de asignacion compuestos no pueden sobrecargarse explicitamente. Pero cuando se sobrecarga un operador binario, el operador de asignacion compuesto correspondiente , si lo hay, tambien se puede sobrecargar de modo implicito. Por ejemplo `+= `se evalua con `+` , que se pueden sobrecargar. |
+| `(T)x`                                                       | No se puede convertir el operador de conversión, pero puede definirse conversiones de tipos personalizadas que pueden realizarse mediante una expresión de conversión |
+| `+=`, `-=`, `*=`, `/=`, `%=`, `&=` ,`^=`, `<<=`, `>>=` , `|=` | Los operadores de asignación compuestos no pueden sobrecargarse explícitamente. Pero cuando se sobrecarga un operador binario, el operador de asignación compuesto correspondiente , si lo hay, también se puede sobrecargar de modo implícito. Por ejemplo `+= `se evalúa con `+` , que se pueden sobrecargar. |
 | `^x`, `x = y`, `x.y`, `x?.y`, `c ? t : f`, `x ?? y`, `x ??= y`, `x..y`, `x->y`, `=>`, `f(x)`, `as`, `await`, `checked`, `unchecked`, `default`, `delegate`, `is`, `nameof`, `new`,`sizeof`, `stackalloc`, `switch`, `typeof`,`with` | Estos operadores no se pueden sobrecargar                    |
 
 ### Inmutabilidad en C# 
 
-Los tipos inmutables son esos que sus datos no pueden ser alterados despues de que se crea la instancia. En tipos inmutables se crea en una nuevo espacio de memoria y los valores modificados son guardados en una nueva memoria. 
+Los tipos inmutables son esos que sus datos no pueden ser alterados después de que se crea la instancia. En tipos inmutables se crea en una nuevo espacio de memoria y los valores modificados son guardados en una nueva memoria. 
 
-En C# los `string` son inmutables, que significa que se crea una nueva memoria cada vez que se altera el objeto, en vez de trabajar en el espacio de memoria donde ya existe la memoria. Esto se traduce en que cada vez que tratamos de modificar un string, un nuevo objeto va a ser referenciado donde va a estar el nuevo string y el espacio de memoria donde estaba el objeto anteriormente va a ser dereferenciado. Entonce si modificamos un strinf constantemente el numero de desreferenciacio a viejos objetos se incrementara y este proceso va a tener que esperar por el recolector de basura para liberar los espacios de memoria que han sido desreferenciados y la aplicacion va disminuir su rendimiento.    
+En C# los `string` son inmutables, que significa que se crea una nueva memoria cada vez que se altera el objeto, en vez de trabajar en el espacio de memoria donde ya existe la memoria. Esto se traduce en que cada vez que tratamos de modificar un string, un nuevo objeto va a ser referenciado donde va a estar el nuevo string y el espacio de memoria donde estaba el objeto anteriormente va a ser desreferenciado. Entonce si modificamos un string constantemente el numero de desreferenciacio a viejos objetos se incrementara y este proceso va a tener que esperar por el recolector de basura para liberar los espacios de memoria que han sido desreferenciados y la aplicación va disminuir su rendimiento.    
 
 ```c#
 string str = string.Empty
@@ -624,9 +623,9 @@ for (int i = 0; i < 1000 ; i++)
 }
 ```
 
-En el codigo de arriba `str` va a ser actualizado 1000 veces dentro de un ciclo y cada vez que se ejecuta el ciclo se crean nuevas instancias , entonces las valores antiguos vas a ser tratados por el recolector de basura despues de algun tiempo. 
+En el código de arriba `str` va a ser actualizado 1000 veces dentro de un ciclo y cada vez que se ejecuta el ciclo se crean nuevas instancias , entonces las valores antiguos vas a ser tratados por el recolector de basura después de algún tiempo. 
 
-No es una buena practica la solucion anterior, es mejor usar tipos mutables. En C# existen `StringBuilder` que es un tipo mutable. Esto significa que  siempre se usa la misma direccion de memoria para alterar el objeto, es decir se trabaja sobre la misma instancia, esto no va a crear ninguna instancia futura por lo tanto no va a disminuir el rendimiento de nuestra aplicacion. 
+No es una buena practica la solución anterior, es mejor usar tipos mutables. En C# existen `StringBuilder` que es un tipo mutable. Esto significa que  siempre se usa la misma dirección de memoria para alterar el objeto, es decir se trabaja sobre la misma instancia, esto no va a crear ninguna instancia futura por lo tanto no va a disminuir el rendimiento de nuestra aplicación. 
 
 ```c#
 StringBuilder = strB = new StringBuilder(); 
@@ -636,11 +635,11 @@ for (int i =0; i < 10000; i++)
 }
 ```
 
- En el codigo anterior, no tiene un impacto grande sobre la memoria porque este no crea instancia cada vez que se ejecuta el cuerpo del ciclo. 
+ En el código anterior, no tiene un impacto grande sobre la memoria porque este no crea instancia cada vez que se ejecuta el cuerpo del ciclo. 
 
-Para crear clases inmutables en C# , tenemos que pensar si sus propiedades o variabes no van a cambiar nunca sus valores despues que sean asigandos la primera vez. 
+Para crear clases inmutables en C# , tenemos que pensar si sus propiedades o variables no van a cambiar nunca sus valores después que sean asignados la primera vez. 
 
-Haciendo la varaible de solo lectura tal que no se pueda modificar la variable despues que se asigne la primera vez. Ejemplo: 
+Haciendo la variable de solo lectura tal que no se pueda modificar la variable después que se asigne la primera vez. Ejemplo: 
 
 ```c#
 class MyClass
@@ -659,11 +658,11 @@ class MyClass
 }
 ```
 
-En el codigo anterior se tiene un campo de solo lectura que es inicializado a travez del constructor de la clase. De esta manera se pueden crear la clases inmutables en C#
+En el código anterior se tiene un campo de solo lectura que es inicializado a través del constructor de la clase. De esta manera se pueden crear la clases inmutables en C#
 
 En C# existe el `namespace` , `System.Collections.Inmmutable` que contiene  colecciones inmutables. Contiene inmutables versiones de `List`, `Dictionaries`, `Arrays` , `Hashes` `Stacks` y `Queues`  
 
-Por ejemplo `ImmutableStack<T>` puede ser usando para pushear y extraer elementos de la pila de la misma manera en que se hace con la implementaciones mutables de `Stack<T>` sin embargo `ImmutableStack<T>` es una coleccion inmutable, sus elementos no pueden ser alterados. Entonces cuando se hace una llamada a `pop`  para extraer un elemento de la pila, una nueva pila es creada y la pila original permanece inalterada.
+Por ejemplo `ImmutableStack<T>` puede ser usando para pushear y extraer elementos de la pila de la misma manera en que se hace con la implementaciones mutables de `Stack<T>` sin embargo `ImmutableStack<T>` es una colección inmutable, sus elementos no pueden ser alterados. Entonces cuando se hace una llamada a `pop`  para extraer un elemento de la pila, una nueva pila es creada y la pila original permanece inalterada.
 
 Vamos a ver el siguiente ejemplo, en este caso vamos a ver como se pueden pushear elementos dentro de una pila inmutable. 
 
@@ -675,7 +674,7 @@ for(int i = 0; i < 10; i++)
 }
 ```
 
-El codigo siguiente muestra que los elementos de una pila inmutable no pueden ser alterado. 
+El código siguiente muestra que los elementos de una pila inmutable no pueden ser alterado. 
 
 ```c#
 var stack = ImmutableStack<int>.Empty;
@@ -692,13 +691,13 @@ Console.ReadKey();
 // No of elements in new stack: 9
 ```
 
-Como se puede ver en el resultado anterior  la pila inmutable original (contine 10 elementos) no ha cambiado despues de la llamada al metodo `pop()`. En cambio una nueva pila inmutables es creada con 9 elementos  
+Como se puede ver en el resultado anterior  la pila inmutable original (contiene 10 elementos) no ha cambiado después de la llamada al método `pop()`. En cambio una nueva pila inmutables es creada con 9 elementos  
 
-Las colecciones inmutables no tiene constructor pero se puede usar el metodo estatico `Create` como se muestra en el codigo a continuacion:
+Las colecciones inmutables no tiene constructor pero se puede usar el método estático `Create` como se muestra en el código a continuación:
 
 ```c#
 var list = ImmutableList.Create(1,2,3,4,5);
 ```
 
-Si se quiere annadir o eliminar un elemento de esta coleccion, una nueva lista inmutable sera creada  y la lista original permanecera igual.
+Si se quiere añadir o eliminar un elemento de esta colección, una nueva lista inmutable sera creada  y la lista original permanecerá igual.s
 
