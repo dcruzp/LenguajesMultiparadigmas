@@ -2319,18 +2319,19 @@ Person {firstname = "David", lastname = "De Quesada"}
   _C++_ tiene herramientas para la inmutabilidad, y que son particularmente útiles si se usan correctamente, pues facilitan la escritura de un código más legible y a la vez si por algún motivo modificamos algún objeto que sea inmutable porque así lo definimos nosotros, nos alerte con un error de compilación que algo está mal con nuestro código, estos keywords son muy usados cuando estamos usando threading o paralelismo en nuestro programa y . Las palabras claves en _C++_ para esto son `const` y `constexpr`, la última introducida a partir _C++11_. A continuación mostramos un ejemplo usando `const`:
 
   Puntero mutable, contenido inmutable
+    <img src="./images/const1.png" style="zoom:100%;" />
 
-  ![const1](/images/const1.png)
+  
 
 
   Puntero inmutable, contenido mutable
 
-  ![const2](/images/const2.png)
+   <img src="./images/const2.png" style="zoom:100%;" />
 
 
   Puntero inmutable, contenido inmutable
 
-  ![const3](/images/const3.png)
+   <img src="./images/const3.png" style="zoom:100%;" />
   
 
   Existe sin embargo, un keyword que es `mutable` que permite modificar ciertas variables por ejemplo un campo de un objeto, si a pesar de haber creado una instancia de este objeto que sea constante, en la definición de ese campo en el objeto ese campo tiene el keyword `mutable` delante como se muesta en el ejemplo a continuación:
@@ -2448,4 +2449,3 @@ Person {firstname = "David", lastname = "De Quesada"}
    - Inmutabilidad: En _Haskell_ todas las expresiones son inmutables, no pueden cambiar una vez se evalúan, esto hace más fácil refactorizar el código y entenderlo. Para modficar un objeto es la mayoría de las estructuras de datos tienen un método que toma el objeto y crea una copia de este. Sin embargo en _C++_ para tener este comportamiento tenemos que hacer uso explícito de los keywords
    `const` y `constexpr`.
 
-   
