@@ -2,16 +2,16 @@
 
 **David Orlando De Quesada Oliva C311**
 
-**Javier Dominguez C312**
+**Javier Domínguez C312**
 
 **Daniel de la Cruz C311**
 
 
-
+<div style="page-break-after: always; break-after: page;"></div>
 
 # <img src="./images/csharp1.png" style="zoom:30%;" /> C#
 
-### Funciones como ciudadanos de primera clase 
+### a.**Funciones como ciudadanos de primer nivel en C#**
 
 Cuando se habla del termino ciudadano de primera clase, se refiere a que es un valor que puede ser asignado a variables, pasado como parámetro o devuelto como resultado de una función. C# también tiene `delegates` que básicamente son tipos a los que se les puede asignar cualquier tipo de método que coincida con su declaración (parámetros, tipos de datos y valor de retorno) 
 
@@ -52,7 +52,62 @@ handler("Hello World");
 
 
 
-### Capacidades de pattern matching en C# 
+
+### b.**List comprehension en C#** 
+
+Una List Comprehension en C# es un tipo de notación en el que el programador puede describir las propiedades que los miembros de un conjunto debe reunir. Son usualmente usado para crear un conjunto basado en otro ya existente aplicando algún tipo de combinación. 
+
+Con la aparición de C# 3.0 y de .Net Framework 3.5, apareció la notación *List Comprehension* basada en `Linkq` . El siguiente ejemplo muestra como formar un conjunto de números pares en el rango del 0 al 10.
+
+```c#
+IEnumerable<int> numbers = Enumerable.Range(0, 10);
+var evens = from num in numbers where num % 2 == 0 select num;
+```
+
+Esto nos va a dar a retornar un objeto `evens` que es una lista que contiene a todos los números pares del 0 al 10  , `0 2 4 6 8 ` 
+
+Las *querys expression* en C# 3 en adelante son azúcar sintáctica sobre la nomenclatura del código de C# normal. Aunque las expresiones de consultas generalmente terminan llamando a métodos de extencion (No tienen que hacerlo y al compilador no le importa, pero generalmente si). Hay varias cosas que se pueden hacer con las colecciones que no están disponibles en las expresiones de consulta de C#, pero son compatibles con las llamadas a métodos, por lo que vale la pena conocer ambos tipos de sintaxis.
+
+```c#
+List<Foo> fooList = new List<Foo>();
+IEnumerable<string> extract = from foo in fooList where foo.Bar > 10 select foo.Name.ToUpper();
+```
+
+es preprocesado en: 
+
+```c#
+List<Foo> fooList = new List<Foo>();
+IEnumerable<string> extract = fooList.Where(foo => foo.Bar > 10)
+                                     .Select(foo => foo.Name.ToUpper());
+```
+
+Si se quieren hacer filtros basados en el indice del valor en la colección original se puede usar una sobrecarga apropiada de `Where` que no es posible en las *query expression*  
+
+```c#
+List<Foo> fooList = new List<Foo>();
+IEnumerable<string> extract = fooList.Where((foo, index) => foo.Bar > 10 + index)
+                                     .Select(foo => foo.Name.ToUpper());
+```
+
+Tambien existe `List<T>.ConvertAll` que se comporta igual que las *list Comprehension* realizando la misma operacion en cada elemento de una lista existente y luego devolviendo una nueva coleccion. Esta es una alternativa al uso de `Linq`, especialmente si se esta usando .NET 2.0 . En el ejemplo siguiente se muestra como usar esta con C# 3.0 pasando una función lambda especificando la función de mapeo que se necesita.  
+
+```c#
+var foo = new List<int> {1,2,3}; 
+var bar = foo.ConvertAll (x => x * 2);  //list comprehension 
+Console.WriteLine(string.Join(" ", bar)); // should print 2,4,6
+```
+
+Para C# 2.0, tu puedes usar un método anónimo con el `delegate`  `Convert`  para hacer algo parecido. 
+
+```c#
+List<int> foo = new List<int> (new int[]{1,2,3}); 
+var bar = foo.ConvertAll(new Converter<int, int>(delegate (int x) { return x * 2; }));
+Console.WriteLine(string.Join(" ", bar));
+```
+
+ Esto se puede aplicar no solo a listas , tambien se pueden usar `Arrays` usando `Array.ConvertAll` 
+
+### c.**Capacidades de pattern matching en C#**
 
 Pattern matching en C# proporciona una sintaxis mas concisa para probar expresiones y tomar medidas cuando una expresión coincide. La expresión `is` admite pattern matching para probar una expresión y declarar condicionalmente una nueva variable al resultado de esa  expresión. La expresión `switch` permite realizar acciones basadas en el primer patrón coincidente de una expresión. Estas dos expresiones brindan un rico vocabulario de patrones.
 
@@ -226,61 +281,7 @@ El codigo anterior muestra la *positional pattern* donde las propiedades son dec
 
 
 
-### List comprehension en C# 
-
-Una List Comprehension en C# es un tipo de notación en el que el programador puede describir las propiedades que los miembros de un conjunto debe reunir. Son usualmente usado para crear un conjunto basado en otro ya existente aplicando algún tipo de combinación. 
-
-Con la aparición de C# 3.0 y de .Net Framework 3.5, apareció la notación *List Comprehension* basada en `Linkq` . El siguiente ejemplo muestra como formar un conjunto de números pares en el rango del 0 al 10.
-
-```c#
-IEnumerable<int> numbers = Enumerable.Range(0, 10);
-var evens = from num in numbers where num % 2 == 0 select num;
-```
-
-Esto nos va a dar a retornar un objeto `evens` que es una lista que contiene a todos los números pares del 0 al 10  , `0 2 4 6 8 ` 
-
-Las *querys expression* en C# 3 en adelante son azúcar sintáctica sobre la nomenclatura del código de C# normal. Aunque las expresiones de consultas generalmente terminan llamando a métodos de extencion (No tienen que hacerlo y al compilador no le importa, pero generalmente si). Hay varias cosas que se pueden hacer con las colecciones que no están disponibles en las expresiones de consulta de C#, pero son compatibles con las llamadas a métodos, por lo que vale la pena conocer ambos tipos de sintaxis.
-
-```c#
-List<Foo> fooList = new List<Foo>();
-IEnumerable<string> extract = from foo in fooList where foo.Bar > 10 select foo.Name.ToUpper();
-```
-
-es preprocesado en: 
-
-```c#
-List<Foo> fooList = new List<Foo>();
-IEnumerable<string> extract = fooList.Where(foo => foo.Bar > 10)
-                                     .Select(foo => foo.Name.ToUpper());
-```
-
-Si se quieren hacer filtros basados en el indice del valor en la colección original se puede usar una sobrecarga apropiada de `Where` que no es posible en las *query expression*  
-
-```c#
-List<Foo> fooList = new List<Foo>();
-IEnumerable<string> extract = fooList.Where((foo, index) => foo.Bar > 10 + index)
-                                     .Select(foo => foo.Name.ToUpper());
-```
-
-Tambien existe `List<T>.ConvertAll` que se comporta igual que las *list Comprehension* realizando la misma operacion en cada elemento de una lista existente y luego devolviendo una nueva coleccion. Esta es una alternativa al uso de `Linq`, especialmente si se esta usando .NET 2.0 . En el ejemplo siguiente se muestra como usar esta con C# 3.0 pasando una función lambda especificando la función de mapeo que se necesita.  
-
-```c#
-var foo = new List<int> {1,2,3}; 
-var bar = foo.ConvertAll (x => x * 2);  //list comprehension 
-Console.WriteLine(string.Join(" ", bar)); // should print 2,4,6
-```
-
-Para C# 2.0, tu puedes usar un método anónimo con el `delegate`  `Convert`  para hacer algo parecido. 
-
-```c#
-List<int> foo = new List<int> (new int[]{1,2,3}); 
-var bar = foo.ConvertAll(new Converter<int, int>(delegate (int x) { return x * 2; }));
-Console.WriteLine(string.Join(" ", bar));
-```
-
- Esto se puede aplicar no solo a listas , tambien se pueden usar `Arrays` usando `Array.ConvertAll` 
-
-### Inferencia de Tipos en C# 
+### d.**Inferencia de Tipos en C#** 
 
 La inferencia de tipos es un proceso por el cual el compilador determina el tipo de una variable local que ha sido declarada sin una declaración explicita de su tipo. El tipo es inferido a partir del valor inicial provisto a la variable. Para que el algoritmo de inferencia de tipos funciones es necesaria una entrada, que es el contenido de la variable. Si no inicializamos la variable a inferir tendremos un error de compilación. La inferencia de tipos en C# se puede implementar haciendo uso de la palabra reservada `var` . la sintaxis para declarar una variable haciendo uso de la inferencia de tipos seria así: 
 
@@ -301,7 +302,7 @@ Entonces resumiendo la inferencia de tipos no se resuelve utilizando mecanismo d
 
 
 
-### Tuplas en C# 
+### e.**Tuplas en C#** 
 
 Las tuplas se crea utilizando los tipos genéricos `Tuple<T1>`  - `Tuple<T1,T2,T3,T4,T5,T6,T7,T8>`. Cada uno de los tipos representa una tupla que contiene de 1 a 8 elementos. Los tipos pueden ser de diferente tipos.
 
@@ -535,7 +536,7 @@ if (limitsLookup.TryGetValue(4, out (int Min, int Max) limits))
 
   
 
-### Redefinicion de operadores en C# 
+### f.**Redefinición de operadores en C#** 
 
 Un tipo definido por el programador puede sobrecargar un operador de C# predefinido. Un tipo puede proporcionar la implementacion personalizada de una operación cuando uno o los dos operandos son de ese tipo. 
 
@@ -618,7 +619,7 @@ La tabla siguiente muestra las posibilidades de sobrecarga de los operadores en 
 | `+=`, `-=`, `*=`, `/=`, `%=`, `&=` ,`^=`, `<<=`, `>>=` , `|=` | Los operadores de asignación compuestos no pueden sobrecargarse explícitamente. Pero cuando se sobrecarga un operador binario, el operador de asignación compuesto correspondiente , si lo hay, también se puede sobrecargar de modo implícito. Por ejemplo `+= `se evalúa con `+` , que se pueden sobrecargar. |
 | `^x`, `x = y`, `x.y`, `x?.y`, `c ? t : f`, `x ?? y`, `x ??= y`, `x..y`, `x->y`, `=>`, `f(x)`, `as`, `await`, `checked`, `unchecked`, `default`, `delegate`, `is`, `nameof`, `new`,`sizeof`, `stackalloc`, `switch`, `typeof`,`with` | Estos operadores no se pueden sobrecargar                    |
 
-### Inmutabilidad en C# 
+### g.**Inmutabilidad en C#** 
 
 Los tipos inmutables son esos que sus datos no pueden ser alterados después de que se crea la instancia. En tipos inmutables se crea en una nuevo espacio de memoria y los valores modificados son guardados en una nueva memoria. 
 
@@ -717,7 +718,7 @@ Si se quiere añadir o eliminar un elemento de esta colección, una nueva lista 
 
 
 
-# a. Funciones como ciudadanos de primer nivel en Python
+### a.**Funciones como ciudadanos de primer nivel en Python**
 
 
 El concepto funciones como ciudadanos de primera clase manda que las funciones son tratados como ciudadanos de primera clase: almacenadas en variables o es una estructura de datos, pasadas o devueltas como variables por una función.
@@ -800,7 +801,7 @@ print(operations[0](3)) ##=> 9
 print(operations[1](7)) ##=>343
 ```
 
-# Comparando con Haskell:
+### **Comparando con Haskell:**
 
 En Haskell las funciones son  tratadas como ciudadanos de primera clase. Esto significa que las funciones pueden almacenarse en estructura de datos , pasarse como argumento a otras funciones y devolverse como resultado.
 
@@ -826,9 +827,7 @@ doble x = x *2
 [2,4,6,8,10]
 ```
 
-# b. List comprehension en Python
-
-## List comprehension 
+### b.**List comprehension en Python**
 
 Uno de los aspectos más distintivos de Python son las list y las list comprehension feature, que pueden usarse en una línea de código construir funcionalidades poderosas.
 
@@ -1082,7 +1081,7 @@ Puntos importantes de las list comprehension en Python:
 * Generalmente las list comprehension son una forma más liviana para crear listas que la forma estándar con funciones y ciclos.
 * Cada list comprehension puede ser reescrita en un ciclo for, ero en el contexto de interpretación de listas, no se puede reescribir cada bucle for.
 
-# Comparación con Haskell:
+### **Comparación con Haskell:**
 
 Haskell tiene una notación llamada list comprehension que es muy conveniente para describir ciertos tipos de listas. 
 Las sintaxis básica de una list comprehension en Haskell es:
@@ -1161,7 +1160,7 @@ triads n = [ (x,y,z) | x <- [1..n], y <- [1..n], z <- [1..n], x^2 + y ^2 == z^2]
 [(3,4,5),(4,3,5),(6,8,10),(8,6,10)]
 ```
 
-# c. Capacidades de pattern matching en Python
+### c.**Capacidades de pattern matching en Python**
 
 
 Antes de Python `3.10` no existía algo como los switch case en Python para hacer pattern matching. Se podía usar diccionarios para internar simular en algunos casos la correspondencia con algún patrón
@@ -1710,7 +1709,7 @@ Output:
 UnboundLocalError: local variable 'tupla' referenced before assignment
 ```
 
-# Comparación con Haskell:
+### **Comparación con Haskell:**
 En Haskell las tuplas se representan con paréntisis y cada elemento separado por comas similar a Python:
 ```Haskell
 Prelude> let a = (4, 5, 6, 7)
@@ -1776,7 +1775,7 @@ print(multOutput(5))
 (25, 10)
 ```
 
- # f. Redefinición de operadores en Python
+### f.**Redefinición de operadores en Python**
 
 
 Sobrecargar el operador significa 
@@ -1882,7 +1881,7 @@ Suma: 5 + 7i
 Resta: -3 + -3i
 ```
 
-# Comparación con Haskell:
+### **Comparación con Haskell:**
 
 En Haskell también se puede hacer sobrecarga de operadores a tipos definidos usando type classes.
 
@@ -1912,7 +1911,7 @@ Terna (-3,-3,-3)
 Terna (-3,-3,-3)
 ```
 
-# g. Inmutabilidad en Python:
+### **g.Inmutabilidad en Python:**
 
 
 La mutabililidad es una propiedad diferenciadora de los tipos de datos en Python que hacen un gran contraste con los otros tipos de datos. Tiendo a ser la capacidad de los tipos de datos que permiten que se modifiquen después de su creación, a lo que se puede extraer un valor y también extraer de él.
@@ -2001,7 +2000,7 @@ print(a[0])
 TypeError: 'MyImmutable' object does not support item assignment
 
 ```
-**Comparación con Haskell:**
+### **Comparación con Haskell:**
 
 Las expresiones en Haskell son inmutables. No pueden cambiar después que son evaluados. La inmutabilidad hace que la refactorización sea mucho más fácil y que el código sea mucho más sencillo de razonar.
 Para combiar un objeto la mayoría de las estructuras de datos proporcionan métodos que toman el objeto antiguo y crean una nueva copia.
@@ -2033,7 +2032,7 @@ Person {firstname = "David", lastname = "De Quesada"}
 # <img src="./images/cpp1.png" style="zoom:30%;" /> C++
 
 
- ## Funciones como ciudadanos de primer nivel
+ ### a.**Funciones como ciudadanos de primer nivel en C++**
 
     En _C++_ se puede afirmar que las funciones son ciudadanos de primer nivel pues cumplen todas las condiciones. Pueden ser almacenadas en variables, pasadas como argumentos a otras funciones y retornar llamados a estas dentro de otras funciones, todo esto haciendo uso de **punteros a funciones** como se muestra a continuación:
 
@@ -2086,12 +2085,12 @@ Person {firstname = "David", lastname = "De Quesada"}
     Esta se encarga de aplicar dicha función sea cual sea, siempre que cumpla con las restricciones de tipo, a los restantes argumentos.
     
     <br>
-- ## List Comprehension
+### b.**List Comprehension en C++**
 
   _C++_ por ahora no ofrece esta herramienta, sin embargo sería posible implementar algo parecido utilizando templates.
 
 
-- ## Capacidades de pattern matching
+### c.**Capacidades de pattern matching en C++**
 
     _C++_ posee capacidades de pattern matching, nos referimos a las instrucciones `switch` `case` y a una biblioteca desarrollada por Michael Park que está disponible para _C++17_ y que está propuesta para introducirse a partir de _C++23_. El problema es que en _C++_ solo podemos hacer uso del `switch` `case` si el argumento de la instrucción `switch` es un `int` o un valor de tipo `enum`, por lo que haría falta hacer algún tipo de conversión si uno quisiera usar esta herramienta y los datos no cumplen con estas restricciones, como mostramos en el ejemplo a continuación:
 
@@ -2180,7 +2179,7 @@ Person {firstname = "David", lastname = "De Quesada"}
 
     Se puede observar en los métodos operadores como el `_`, que se utilizan para indicar que no importa lo que tenga el patrón en ese lugar, se va a ejecutar determinada acción. Se puede obersvar además que se hace uso de expresiones lambdas.
 
-- ## Inferencia de tipos
+### d.**Inferencia de tipos en C++**
   
   _C++_ posee inferencia de tipos, hay 2 keywords específicamente para esto, aunque no son exactamente lo mismo, nos referimos a `auto` y 
   `decltype`, ambas incluídas desde _C++11_.
@@ -2213,7 +2212,7 @@ Person {firstname = "David", lastname = "De Quesada"}
 
   ![Decltype](/images/decltype_cpp.png)
 
-- ## Tuplas
+### e.**Tuplas en C++**
 
   _C++_ tiene soporte para tuplas, es necesario importar la librería **tuple**, y está desde _C++11_. Está implementado utilizando **clases** y **templates**. Una tupla es básicamente un **template**.
   A continuación mostramos algunas de sus características:
@@ -2256,7 +2255,7 @@ Person {firstname = "David", lastname = "De Quesada"}
     tuple<int, int, int> three = tuple<int, int, int>{3, 4, 5};
     ```
 
-- ## Redefinición de operadores
+### f.**Redefinición de operadores en C++**
   
   _C++_ soporta sobrecarga de operadores o redefinición de operadores, aunque hay varias restricciones:
 
@@ -2314,7 +2313,7 @@ Person {firstname = "David", lastname = "De Quesada"}
 
     Creamos una clase **my_pair**, que es básicamente una tupla y le redefinimos los operadores `+` y `<<`, para que sumara y se comportara de la manera especificada al imprimirla usando `cout`.
 
-- ## Inmutabilidad
+### g.**Inmutabilidad en C++**
   
   _C++_ tiene herramientas para la inmutabilidad, y que son particularmente útiles si se usan correctamente, pues facilitan la escritura de un código más legible y a la vez si por algún motivo modificamos algún objeto que sea inmutable porque así lo definimos nosotros, nos alerte con un error de compilación que algo está mal con nuestro código, estos keywords son muy usados cuando estamos usando threading o paralelismo en nuestro programa y . Las palabras claves en _C++_ para esto son `const` y `constexpr`, la última introducida a partir _C++11_. A continuación mostramos un ejemplo usando `const`:
 
@@ -2380,7 +2379,7 @@ Person {firstname = "David", lastname = "De Quesada"}
 
   En el caso de `constexpr` se usa para valores que pueden ser computados en tiempo de compilación, y ofrecen una forma de inicializar variables de forma segura en caso de que se este utilizando threading o paralelismo en el programa.
 
-## Comparando con _Haskell_
+### **Comparando con _Haskell_**
 
    - Funciones como ciudadanos de primer nivel: En _Haskell_ las funciones por defecto son ciudadanos de primera clase y la sintaxis es bien sencilla para tratar con funciones como si fueran cualquier otro objeto, como se muestra a continuación:
 
