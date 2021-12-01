@@ -1,5 +1,7 @@
 # Seminario 12. Características funcionales en lenguajes Multi-paradigmas
 
+Integrantes:
+
 **David Orlando De Quesada Oliva C311**
 
 **Javier Domínguez C312**
