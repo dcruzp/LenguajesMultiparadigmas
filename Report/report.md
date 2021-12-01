@@ -41,6 +41,32 @@ handler("Hello World");
 // Hello World
 ```
 
+#### Comparación con Haskell
+
+En Haskell las funciones son cuidadanos de primera clase , es decir pueden ser asignadas a una varaible , pasarse como argumento a otra funcion y devolverse como resultado 
+
+El siguiente ejemplo muestra como funciona esta caractersitica en un lenguaje funcional como Haskell. 
+
+```haskell
+mapfunction :: (a -> b) -> [a] -> [b]
+mapfunction _ [] = []
+mapfunction f (x:xs) = f x : mapfunction f xs
+```
+
+Entonces si definimos una funcion para llamar a la funcion anterior pasandole los parametors definidos entoces estariamos llamando a la funcion `mapfunction` con la funcion `cube` que definiremos a continuacion.
+
+```
+cube :: Num a => a -> a
+cube x = x**2
+```
+
+La salida de nuestro programa seria la evaluacion de la funcion en la lista que se pasa como argumento. por lo tanto tendriamos el resultado siguiente: 
+
+```
+*Main> mapfunction cube [2,3,4]
+[4,9,16]
+```
+
 
 
 ### Capacidades de pattern matching en C# 
@@ -271,6 +297,24 @@ Console.WriteLine(string.Join(" ", bar));
 
  Esto se puede aplicar no solo a listas , tambien se pueden usar `Arrays` usando `Array.ConvertAll` 
 
+#### Comparación con haskell 
+
+Haskell tiene List Comprehension para describir estas facilidades que brindan otros lenguajes también. Por ejemplo podemos hacer lo siguiente en Haskell 
+
+```haskell
+Prelude> [n | n <- [2..5] , n `mod` 2 == 0]
+[2,4]
+```
+
+Aquí obtendríamos los números pares que están entre el 2 y el 5, la forma de hacerlo es bastante sencilla, lo que nos da la facilidad de una expresividad mayor con pocas lineas de código. Este comportamiento se obtiene en C# usando querys o algunas otras particularidades que existen en C# para esto. En haskell también podríamos hacer algo como lo siguiente: 
+
+```haskell
+primos :: Int -> [Int] 
+primos n = [ x | x <- [2..n] , esPrimo x]
+```
+
+Si nos damos cuenta es la misma sintaxis que en el ejemplo de arriba solo que aquí queríamos resaltar que `esPrimo ` es una función previamente declarada , por lo tanto podemos complejizar la sentencia tanto como se quiera. 
+
 ### Inferencia de Tipos en C# 
 
 La inferencia de tipos es un proceso por el cual el compilador determina el tipo de una variable local que ha sido declarada sin una declaración explicita de su tipo. El tipo es inferido a partir del valor inicial provisto a la variable. Para que el algoritmo de inferencia de tipos funciones es necesaria una entrada, que es el contenido de la variable. Si no inicializamos la variable a inferir tendremos un error de compilación. La inferencia de tipos en C# se puede implementar haciendo uso de la palabra reservada `var` . la sintaxis para declarar una variable haciendo uso de la inferencia de tipos seria así: 
@@ -290,7 +334,15 @@ var inferredType = 3.14f        // notacion sufijo
 
 Entonces resumiendo la inferencia de tipos no se resuelve utilizando mecanismo de código dinámico, que afecten la performance en tiempo de ejecución. La inferencia de tipos se resuelve en tiempo de compilación, por lo tanto existe un costo en tiempo de compilación, ese tiempo es el tiempo que tarda el algoritmo de inferencia en sintetizar una expresión y resolver el tipo de una variable.  La inferencia de tipos tanto de valor como de referencia es para variable locales de métodos. No se aplica para variables de clases, propiedades, parámetros ni valores de retorno. La inferencia de tipos no es mas que azúcar sintáctica, una manera cómoda y ágil de declarar variables locales.
 
+#### Comparación con Haskell
 
+En Haskell la inferencia de tipo es por defecto , es decir no existe un keyword especial para este proposito. Por ejemplo podemos definir una fucnion sin especificar tipo , pero el compilador determianara que tipo de funcion es y el tipo del valor de retorno: 
+
+```
+producto list = product list 
+```
+
+`product` es una función en Haskell para encontrar el producto entre números , en este caso de arriba el compilador asume que la función `producto` recibe una lista de enteros y devuelve un entero , es decir `producto :: [Int] -> Int`
 
 ### Tuplas en C# 
 
@@ -524,7 +576,27 @@ if (limitsLookup.TryGetValue(4, out (int Min, int Max) limits))
 // Found limits: min is 10, max is 20
 ```
 
-  
+  #### Comparación con Haskell 
+
+En Haskell es bastante parecido a C# , la sintaxis es basntante parecida , las tupla son representadas con parentesis y los elementos son separados por `,` .Ejemplo
+
+```haskell
+Prelude> let tuple = (1,2,3)
+Prelude> tuple
+(1,2,3)
+Prelude> :t tuple
+tuple :: (Num a, Num b, Num c) => (a, b, c)
+```
+
+Los elementos de las tuplas pueden ser de dstinto tipo , como sucede en C#, ejemplo : 
+
+```haskell
+Prelude> let tuple = ("perro" , 4 , True)
+Prelude> tuple
+("perro",4,True)
+```
+
+Las tuplas pueden ser usadas  como valores de retorno en la función, para poder encapsular mas de una elemento el el retorno de una función, como se practica en C# tambien. 
 
 ### Redefinicion de operadores en C# 
 
@@ -608,6 +680,28 @@ La tabla siguiente muestra las posibilidades de sobrecarga de los operadores en 
 | `(T)x`                                                       | No se puede convertir el operador de conversión, pero puede definirse conversiones de tipos personalizadas que pueden realizarse mediante una expresión de conversión |
 | `+=`, `-=`, `*=`, `/=`, `%=`, `&=` ,`^=`, `<<=`, `>>=` , `|=` | Los operadores de asignación compuestos no pueden sobrecargarse explícitamente. Pero cuando se sobrecarga un operador binario, el operador de asignación compuesto correspondiente , si lo hay, también se puede sobrecargar de modo implícito. Por ejemplo `+= `se evalúa con `+` , que se pueden sobrecargar. |
 | `^x`, `x = y`, `x.y`, `x?.y`, `c ? t : f`, `x ?? y`, `x ??= y`, `x..y`, `x->y`, `=>`, `f(x)`, `as`, `await`, `checked`, `unchecked`, `default`, `delegate`, `is`, `nameof`, `new`,`sizeof`, `stackalloc`, `switch`, `typeof`,`with` | Estos operadores no se pueden sobrecargar                    |
+
+### Comparación con Haskell 
+
+La sobrecarga en Haskell esta diponible utilizando clase de tipo . Por ejemplo para sobrecargar `+` , como `+` pertenece a `Num` por lo que habria qu eproporcionar una clase de tipo `Num` para su tipo. 
+
+Se podria definir un nuevo operador por ejemplo: 
+
+```haskell
+data Pair a b = Pair a b
+	deriving Show 
+infixl 6 |+| -- optional; set same precedence and associativity as + 
+Pair a b |+| Pair c d = Pair (a+c) (b+d)
+```
+
+Y si lo ejecutamos tendriamos el comportamiento deseado: 
+
+```haskell
+> Pair 2 4 |+| Pair 1 2 
+Pair 3 6
+```
+
+
 
 ### Inmutabilidad en C# 
 
