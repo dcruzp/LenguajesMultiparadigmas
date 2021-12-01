@@ -50,6 +50,32 @@ handler("Hello World");
 // Hello World
 ```
 
+#### Comparación con Haskell
+
+En Haskell las funciones son cuidadanos de primera clase , es decir pueden ser asignadas a una varaible , pasarse como argumento a otra funcion y devolverse como resultado 
+
+El siguiente ejemplo muestra como funciona esta caractersitica en un lenguaje funcional como Haskell. 
+
+```haskell
+mapfunction :: (a -> b) -> [a] -> [b]
+mapfunction _ [] = []
+mapfunction f (x:xs) = f x : mapfunction f xs
+```
+
+Entonces si definimos una funcion para llamar a la funcion anterior pasandole los parametors definidos entoces estariamos llamando a la funcion `mapfunction` con la funcion `cube` que definiremos a continuacion.
+
+```
+cube :: Num a => a -> a
+cube x = x**2
+```
+
+La salida de nuestro programa seria la evaluacion de la funcion en la lista que se pasa como argumento. por lo tanto tendriamos el resultado siguiente: 
+
+```
+*Main> mapfunction cube [2,3,4]
+[4,9,16]
+```
+
 
 
 
@@ -106,6 +132,24 @@ Console.WriteLine(string.Join(" ", bar));
 ```
 
  Esto se puede aplicar no solo a listas , tambien se pueden usar `Arrays` usando `Array.ConvertAll` 
+
+#### Comparación con haskell 
+
+Haskell tiene List Comprehension para describir estas facilidades que brindan otros lenguajes también. Por ejemplo podemos hacer lo siguiente en Haskell 
+
+```haskell
+Prelude> [n | n <- [2..5] , n `mod` 2 == 0]
+[2,4]
+```
+
+Aquí obtendríamos los números pares que están entre el 2 y el 5, la forma de hacerlo es bastante sencilla, lo que nos da la facilidad de una expresividad mayor con pocas lineas de código. Este comportamiento se obtiene en C# usando querys o algunas otras particularidades que existen en C# para esto. En haskell también podríamos hacer algo como lo siguiente: 
+
+```haskell
+primos :: Int -> [Int] 
+primos n = [ x | x <- [2..n] , esPrimo x]
+```
+
+Si nos damos cuenta es la misma sintaxis que en el ejemplo de arriba solo que aquí queríamos resaltar que `esPrimo ` es una función previamente declarada , por lo tanto podemos complejizar la sentencia tanto como se quiera. 
 
 ### c.**Capacidades de pattern matching en C#**
 
@@ -300,7 +344,15 @@ var inferredType = 3.14f        // notacion sufijo
 
 Entonces resumiendo la inferencia de tipos no se resuelve utilizando mecanismo de código dinámico, que afecten la performance en tiempo de ejecución. La inferencia de tipos se resuelve en tiempo de compilación, por lo tanto existe un costo en tiempo de compilación, ese tiempo es el tiempo que tarda el algoritmo de inferencia en sintetizar una expresión y resolver el tipo de una variable.  La inferencia de tipos tanto de valor como de referencia es para variable locales de métodos. No se aplica para variables de clases, propiedades, parámetros ni valores de retorno. La inferencia de tipos no es mas que azúcar sintáctica, una manera cómoda y ágil de declarar variables locales.
 
+#### Comparación con Haskell
 
+En Haskell la inferencia de tipo es por defecto , es decir no existe un keyword especial para este proposito. Por ejemplo podemos definir una fucnion sin especificar tipo , pero el compilador determianara que tipo de funcion es y el tipo del valor de retorno: 
+
+```
+producto list = product list 
+```
+
+`product` es una función en Haskell para encontrar el producto entre números , en este caso de arriba el compilador asume que la función `producto` recibe una lista de enteros y devuelve un entero , es decir `producto :: [Int] -> Int`
 
 ### e.**Tuplas en C#** 
 
@@ -534,7 +586,29 @@ if (limitsLookup.TryGetValue(4, out (int Min, int Max) limits))
 // Found limits: min is 10, max is 20
 ```
 
-  
+#### Comparación con Haskell 
+
+En Haskell es bastante parecido a C# , la sintaxis es basntante parecida , las tupla son representadas con parentesis y los elementos son separados por `,` .Ejemplo
+
+```haskell
+Prelude> let tuple = (1,2,3)
+Prelude> tuple
+(1,2,3)
+Prelude> :t tuple
+tuple :: (Num a, Num b, Num c) => (a, b, c)
+```
+
+Los elementos de las tuplas pueden ser de dstinto tipo , como sucede en C#, ejemplo : 
+
+```haskell
+Prelude> let tuple = ("perro" , 4 , True)
+Prelude> tuple
+("perro",4,True)
+```
+
+Las tuplas pueden ser usadas  como valores de retorno en la función, para poder encapsular mas de una elemento el el retorno de una función, como se practica en C# tambien. 
+
+
 
 ### f.**Redefinición de operadores en C#** 
 
@@ -618,6 +692,28 @@ La tabla siguiente muestra las posibilidades de sobrecarga de los operadores en 
 | `(T)x`                                                       | No se puede convertir el operador de conversión, pero puede definirse conversiones de tipos personalizadas que pueden realizarse mediante una expresión de conversión |
 | `+=`, `-=`, `*=`, `/=`, `%=`, `&=` ,`^=`, `<<=`, `>>=` , `|=` | Los operadores de asignación compuestos no pueden sobrecargarse explícitamente. Pero cuando se sobrecarga un operador binario, el operador de asignación compuesto correspondiente , si lo hay, también se puede sobrecargar de modo implícito. Por ejemplo `+= `se evalúa con `+` , que se pueden sobrecargar. |
 | `^x`, `x = y`, `x.y`, `x?.y`, `c ? t : f`, `x ?? y`, `x ??= y`, `x..y`, `x->y`, `=>`, `f(x)`, `as`, `await`, `checked`, `unchecked`, `default`, `delegate`, `is`, `nameof`, `new`,`sizeof`, `stackalloc`, `switch`, `typeof`,`with` | Estos operadores no se pueden sobrecargar                    |
+
+#### Comparación con Haskell 
+
+La sobrecarga en Haskell esta diponible utilizando clase de tipo . Por ejemplo para sobrecargar `+` , como `+` pertenece a `Num` por lo que habria qu eproporcionar una clase de tipo `Num` para su tipo. 
+
+Se podria definir un nuevo operador por ejemplo: 
+
+```haskell
+data Pair a b = Pair a b
+	deriving Show 
+infixl 6 |+| -- optional; set same precedence and associativity as + 
+Pair a b |+| Pair c d = Pair (a+c) (b+d)
+```
+
+Y si lo ejecutamos tendriamos el comportamiento deseado: 
+
+```haskell
+> Pair 2 4 |+| Pair 1 2 
+Pair 3 6
+```
+
+
 
 ### g.**Inmutabilidad en C#** 
 
@@ -849,7 +945,7 @@ Ventajas de las List comprehension:
 Hay varias formas de recorrer una lista en Python. Sin embargo el enfoque más común es usar el ciclo for.
 
 Veamos el siguiente ejemplo:
-   
+
 ```Python
 # Lista vacía
 List = []
@@ -885,7 +981,7 @@ Ouput:
 ['C', 'o', 'm', 'p', 'u', 't', 'e', 'r', 'S', 'c', 'i', 'e', 'n', 'c', 'e']
 
 ```
- 
+
 **Más ejemplos:**
 
 Obtener una lista con los enteros que están en [0,10):
@@ -1279,7 +1375,7 @@ El **as pattern** matchea con cualquier patrón que esté en su lado izquierdo, 
 Para agregar condiciones podemos usar las `guards`. 
 La sintaxis de las `guards` consiste en el keyword
 `if` seguido de cualquier expresión
- 
+
 Ejemplo:
 
 ```Python
@@ -1469,7 +1565,7 @@ Veamos algunos ejemplos:
 
 Definamos la siguiente función simple que dado un número de entrada le suma 2 :
 
- 
+
 ```Haskell
 suma2 x =  x+2
 ```
@@ -1621,7 +1717,7 @@ TypeError: 'tuple' object does not support item assignment
 ```
 
 **Slicing en Tuplas:**
- 
+
  Podemos hacer slicing en listas de la forma que lo hacemos en strings o listas. Tuple slicing es básicamente usado para obtener un rango de items de esta. Para hacer el slicing en tuplas usamos el operador de slicing. El operador slicing es representado con las sintaxis [start:stop:step]. El step se puede omitir por defecto es 1.
 
  Ejemplo1:
@@ -2035,52 +2131,52 @@ Person {firstname = "David", lastname = "De Quesada"}
  ### a.**Funciones como ciudadanos de primer nivel en C++**
 
     En _C++_ se puede afirmar que las funciones son ciudadanos de primer nivel pues cumplen todas las condiciones. Pueden ser almacenadas en variables, pasadas como argumentos a otras funciones y retornar llamados a estas dentro de otras funciones, todo esto haciendo uso de **punteros a funciones** como se muestra a continuación:
-
+    
     ```cpp
     #include <iostream>
     #include <functional>
     #include <tuple>
-
+    
     using namespace std;
-
+    
     int product(int, int);
     int add(int, int);
-
+    
     int main(int argc, char const *argv[]) {
         //\\// Inferencia de tipos con auto, uso de lambda y retornando el llamado a una funcion dentro de la expresion lambda (que es otra funcion).
         auto apply_arth_func = [] (int (*func)(int, int), int val1, int val2) { return (*func)(val1, val2); }; //
-
+    
         //\\// Asignando funciones a variables.
         int (*mul)(int, int) = product;
         int (*sum)(int, int) = add;
-
+    
         cout << apply_arth_func(product, 2, 3)<< endl;
         cout << apply_arth_func(add, 1, -5)<< endl;
-
+    
         return 0;
     }
-
+    
     int product(int val1, int val2) {
        return val1*val2;
     }
-
+    
     int add(int val1, int val2) {
         return val1+val2;
     }
     ```
-
+    
     **output**
-
+    
     ```
     6
     -4
     ```
-
+    
     Creamos 2 funciones `product()` y `add()`, luego en el main almacenamos en una variable _apply_arth_func_ una función (una expresión lambda en este caso) que recibe como parámetros:
-
+    
     - una función (operación aritmética) que recibe 2 enteros y devuelve 1 entero.
     - los 2 enteros a los cuales les vamos a aplicar dicha función.
-  
+      
     <br>
     Esta se encarga de aplicar dicha función sea cual sea, siempre que cumpla con las restricciones de tipo, a los restantes argumentos.
     
@@ -2093,55 +2189,55 @@ Person {firstname = "David", lastname = "De Quesada"}
 ### c.**Capacidades de pattern matching en C++**
 
     _C++_ posee capacidades de pattern matching, nos referimos a las instrucciones `switch` `case` y a una biblioteca desarrollada por Michael Park que está disponible para _C++17_ y que está propuesta para introducirse a partir de _C++23_. El problema es que en _C++_ solo podemos hacer uso del `switch` `case` si el argumento de la instrucción `switch` es un `int` o un valor de tipo `enum`, por lo que haría falta hacer algún tipo de conversión si uno quisiera usar esta herramienta y los datos no cumplen con estas restricciones, como mostramos en el ejemplo a continuación:
-
+    
     ```cpp
     #include <iostream>
-
+    
     using namespace std;
-
+    
     enum type_string {int_string, int_ptr_string, char_string};
-
+    
     string what_type(type_string type);
-
+    
     int main(int argc, char const *argv[]) {
         int a = 5;
-
+    
         string name = typeid(a).name();
         type_string type = name == "i" ? int_string : name == "Pi" ? int_ptr_string : char_string;
-
+    
         cout << what_type(type) << "\n\n";
-
+    
         return 0;
     }
-
+    
     string what_type(type_string type) {
         switch (type) {
-
+    
         case int_string:
             return "This is an integer";
             break;
-
+    
         case int_ptr_string:
             return "This is a pointer to an integer";
             break;
-
+    
         default:
             return "This is a char";
         }
     }
-
+    
     ```
-
+    
     **output**
-
+    
     ```
     This is an integer
     ```
-
+    
     Acá lo que hicimos es usando el método `typeid()` y luego el método `name()` nos quedamos con un `string` que identifica el tipo de la variable a, que como sabemos es de tipo `int`. Luego guardamos en una variable de tipo `type_string` (el enum que definimos) un valor determinado según el string que identifica al tipo de la variable, que está almacenado en **name**, y luego llamamos al método `what_type()` que se encarga de usar pattern matching para imprimir un texto específico según el valor que reciba como argumento.
-
+    
     Por otro lado usando la biblioteca de Michael Park podemos hacer cosas más cercanas al pattern matching de lenguajes como _Haskell_, _Rust_, _Scala_, _Swift_, etc.
-
+    
     ```cpp
     void test_pattrn_match() {
         using namespace mpark::patterns;
@@ -2153,7 +2249,7 @@ Person {firstname = "David", lastname = "De Quesada"}
                 pattern(_, _) = [i] { std::printf("Divisible por ambos i = %d\n", i); });
         }
     }
-
+    
     int factorial(int n) {
         using namespace mpark::patterns;
         return match(n)(pattern(0) = [] { return 1; },
@@ -2172,15 +2268,15 @@ Person {firstname = "David", lastname = "De Quesada"}
          //      ^  ^ binding identifier
       );
     }
-
+    
     is_same(101, 101);  // prints: "same"
     is_same(101, 202);  // prints: "diff"
     ```
-
+    
     Se puede observar en los métodos operadores como el `_`, que se utilizan para indicar que no importa lo que tenga el patrón en ese lugar, se va a ejecutar determinada acción. Se puede obersvar además que se hace uso de expresiones lambdas.
 
 ### d.**Inferencia de tipos en C++**
-  
+
   _C++_ posee inferencia de tipos, hay 2 keywords específicamente para esto, aunque no son exactamente lo mismo, nos referimos a `auto` y 
   `decltype`, ambas incluídas desde _C++11_.
 
@@ -2242,21 +2338,21 @@ Person {firstname = "David", lastname = "De Quesada"}
     3
     4
     5
-
+    
     10000
     ```
-
+    
     Una tupla podemos crearla usando el método make_tuple(_item1_, _item2_,..., _itemn_) y asignándoselo a una variable de tipo
     `tuple` señalando entre angulares cada elemento y el tipo de cada uno estos en la tupla como se muestra en el código. 
     
     También es válido:
-
+    
     ```cpp
     tuple<int, int, int> three = tuple<int, int, int>{3, 4, 5};
     ```
 
 ### f.**Redefinición de operadores en C++**
-  
+
   _C++_ soporta sobrecarga de operadores o redefinición de operadores, aunque hay varias restricciones:
 
   - Los operadores `::` (resolución de scope), `.` (acceso a miembro), `.*` (acceso a miembros a través de un punter), y `?:` (condicional ternario) no pueden ser redefinidos.
@@ -2310,11 +2406,11 @@ Person {firstname = "David", lastname = "De Quesada"}
     ```
     (4,7)
     ```
-
+    
     Creamos una clase **my_pair**, que es básicamente una tupla y le redefinimos los operadores `+` y `<<`, para que sumara y se comportara de la manera especificada al imprimirla usando `cout`.
 
 ### g.**Inmutabilidad en C++**
-  
+
   _C++_ tiene herramientas para la inmutabilidad, y que son particularmente útiles si se usan correctamente, pues facilitan la escritura de un código más legible y a la vez si por algún motivo modificamos algún objeto que sea inmutable porque así lo definimos nosotros, nos alerte con un error de compilación que algo está mal con nuestro código, estos keywords son muy usados cuando estamos usando threading o paralelismo en nuestro programa y . Las palabras claves en _C++_ para esto son `const` y `constexpr`, la última introducida a partir _C++11_. A continuación mostramos un ejemplo usando `const`:
 
   Puntero mutable, contenido inmutable
@@ -2331,7 +2427,7 @@ Person {firstname = "David", lastname = "De Quesada"}
   Puntero inmutable, contenido inmutable
 
    <img src="./images/const3.png" style="zoom:100%;" />
-  
+
 
   Existe sin embargo, un keyword que es `mutable` que permite modificar ciertas variables por ejemplo un campo de un objeto, si a pesar de haber creado una instancia de este objeto que sea constante, en la definición de ese campo en el objeto ese campo tiene el keyword `mutable` delante como se muesta en el ejemplo a continuación:
 
@@ -2393,12 +2489,12 @@ Person {firstname = "David", lastname = "De Quesada"}
         Aquí en _C++_ es cierto que podemos considerar a las funciones como ciudadanos de primera clase pero la sintaxis puede ser un poco complicada al principio.
     
    - List Comprehension: En _Haskell_ esta característica viene implementada por defecto y es muy útil pues nos permite crear listas
-   de manera rápida, cómoda e incluso con condicionales dentro como se muesta en el siguiente ejemplo:
+      de manera rápida, cómoda e incluso con condicionales dentro como se muesta en el siguiente ejemplo:
 
         ```haskell
         myIsPrime :: Integral a => a -> Bool
         myIsPrime x = all (\k -> mod x k /= 0) [2..x-1]
-
+      
         myPrimes :: (Integral a, RealFrac a, Floating a) => a -> [a]
         myPrimes x = [z | z <- [2..x], myIsPrime z]
         ```
@@ -2416,7 +2512,7 @@ Person {firstname = "David", lastname = "De Quesada"}
             | d * d > n = [n]
             | n `mod` d == 0 = d : factorize d (n `div` d)
             | otherwise = factorize (d + 1) n
-
+  
          primeFactors :: Integer -> [Integer]
          primeFactors = factorize 2
         ```
@@ -2446,5 +2542,5 @@ Person {firstname = "David", lastname = "De Quesada"}
         ```
 
    - Inmutabilidad: En _Haskell_ todas las expresiones son inmutables, no pueden cambiar una vez se evalúan, esto hace más fácil refactorizar el código y entenderlo. Para modficar un objeto es la mayoría de las estructuras de datos tienen un método que toma el objeto y crea una copia de este. Sin embargo en _C++_ para tener este comportamiento tenemos que hacer uso explícito de los keywords
-   `const` y `constexpr`.
+      `const` y `constexpr`.
 
